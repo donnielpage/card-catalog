@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CardVault - Card Collection Management System
 
-## Getting Started
+A modern web application built with Next.js for managing sports card collections with advanced filtering, team preferences, and comprehensive reporting.
 
-First, run the development server:
+## Features
 
+- 🃏 **Card Management**: Full CRUD operations for your card collection
+- 👥 **User Management**: Role-based access control (Admin, Manager, User)
+- ⚾ **Team Integration**: All 30 MLB teams with official colors
+- ⭐ **Favorites System**: Set favorite teams/players with automatic filtering
+- 📊 **Advanced Reporting**: Detailed statistics and breakdowns
+- 🖼️ **Image Upload**: Upload and manage card images
+- 🔍 **Smart Filtering**: Filter by manufacturer, year, player, team, and more
+- 🎨 **Dynamic Theming**: UI adapts to user's favorite team colors
+
+## Quick Start
+
+### Development Server
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+./dev.sh
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Production Build
+```bash
+./start.sh
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The application will be available at:
+- **Local**: http://localhost:3000
+- **Network**: http://YOUR_IP:3000 (accessible from other devices)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Network Access
 
-## Learn More
+The application is configured to accept connections from other devices on your network. When you start the server, it will display all available access URLs.
 
-To learn more about Next.js, take a look at the following resources:
+### For External Access:
+1. Start the server using `./dev.sh` or `./start.sh`
+2. Note the network IP address shown in the startup message
+3. Other devices can access the application using: `http://YOUR_SERVER_IP:3000`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Environment Configuration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Copy `.env.example` to `.env.local` and customize:
 
-## Deploy on Vercel
+```bash
+cp .env.example .env.local
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Key configurations:
+- `NEXTAUTH_SECRET`: Secure secret for authentication
+- `NEXTAUTH_URL`: Set specific URL if needed (auto-detected by default)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Default Login
+
+- **Username**: admin
+- **Password**: password123
+
+## Database
+
+Uses SQLite database (`carddb.sqlite`) with the following tables:
+- Users (with role-based permissions)
+- Teams (all 30 MLB teams with official colors)
+- Players
+- Manufacturers
+- Cards (with image support)
+
+## Project Structure
+
+```
+├── src/
+│   ├── app/                 # Next.js app router pages
+│   ├── components/          # React components
+│   └── lib/                 # Utilities and database
+├── public/uploads/          # Uploaded card images
+├── scripts/                 # Database and setup scripts
+└── *.sh                     # Start/dev scripts
+```
+
+## Key Features Detail
+
+### Team Color Integration
+- User profile includes favorite team selection
+- CV logo dynamically changes to team colors
+- All 30 MLB teams with official primary/secondary/accent colors
+
+### Advanced Filtering
+- Filter by manufacturer + year combinations
+- Filter by specific players or teams
+- Full-text search across all card fields
+- Auto-apply user favorites as default filters
+- Toggle favorites filtering on/off
+
+### Role-Based Access
+- **User**: Can view and add cards
+- **Manager**: Can modify existing data
+- **Admin**: Full system access including user management
+
+### Image Management
+- Upload card images through web interface
+- Images stored in `public/uploads/`
+- Modal image viewer with full-size display
+
+## Development
+
+Built with:
+- Next.js 15.4.3
+- React 19.1.0
+- TypeScript
+- Tailwind CSS
+- NextAuth.js
+- SQLite3
+
+## License
+
+MIT License
