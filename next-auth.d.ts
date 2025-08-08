@@ -6,6 +6,8 @@ declare module "next-auth" {
       id: string;
       username: string;
       email: string;
+      firstname: string;
+      lastname: string;
       role: string;
       favorite_team_id?: number;
       favorite_player_id?: number;
@@ -16,6 +18,8 @@ declare module "next-auth" {
     id: string;
     username: string;
     email: string;
+    firstname: string;
+    lastname: string;
     role: string;
     favorite_team_id?: number;
     favorite_player_id?: number;
