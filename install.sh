@@ -156,6 +156,12 @@ install_dependencies() {
     echo ""
 }
 
+# Create install date file
+create_install_date() {
+    date +"%Y-%m-%d %H:%M:%S" > .install_date
+    print_success "Install date recorded"
+}
+
 # Initialize database
 initialize_database() {
     print_info "Initializing database..."
@@ -244,6 +250,7 @@ main() {
     # Run checks and installation steps
     check_requirements
     install_dependencies
+    create_install_date
     initialize_database
     build_application
     create_service_scripts
