@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface ImageModalProps {
   isOpen: boolean;
@@ -48,12 +49,16 @@ export default function ImageModal({ isOpen, imageUrl, alt, onClose }: ImageModa
         </button>
         
         {/* Image */}
-        <img
-          src={imageUrl}
-          alt={alt}
-          className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
-          onClick={(e) => e.stopPropagation()} // Prevent closing when clicking on image
-        />
+        <div className="relative max-w-full max-h-full" onClick={(e) => e.stopPropagation()}>
+          <Image
+            src={imageUrl}
+            alt={alt}
+            width={800}
+            height={600}
+            className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+            priority
+          />
+        </div>
       </div>
       
       {/* Instructions */}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions, canManageUsers } from '@/lib/auth';
 import Database from '@/lib/database';
+import bcrypt from 'bcryptjs';
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -55,7 +56,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const bcrypt = require('bcryptjs');
     const passwordHash = await bcrypt.hash(password, 12);
 
     const result = await db.run(

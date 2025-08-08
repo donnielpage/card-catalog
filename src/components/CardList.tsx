@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { CardWithDetails } from '@/lib/types';
 import ImageModal from './ImageModal';
 
@@ -60,10 +61,11 @@ export default function CardList({ cards, onEdit, onDelete, loading = false, emp
               className="relative w-full h-56 bg-gradient-to-br from-gray-100 to-gray-200 cursor-pointer group overflow-hidden rounded-t-lg"
               onClick={() => openImageModal(card.imageurl!, card.cardnumber)}
             >
-              <img
+              <Image
                 src={card.imageurl}
                 alt={`Card #${card.cardnumber}`}
-                className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                fill
+                className="object-contain transition-transform duration-300 group-hover:scale-105"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}

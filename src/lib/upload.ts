@@ -1,6 +1,6 @@
 import multer from 'multer';
 import path from 'path';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 // Configure multer for file storage
 const storage = multer.diskStorage({
@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 });
 
 // File filter to only allow images
-const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const fileFilter = (req: NextRequest, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
@@ -33,9 +33,13 @@ export const upload = multer({
 });
 
 // Helper function to run multer middleware
-export function runMiddleware(req: any, res: any, fn: any) {
+export function runMiddleware(
+  req: NextRequest, 
+  res: NextResponse, 
+  fn: (req: NextRequest, res: NextResponse, callback: (error?: Error) => void) => void
+) {
   return new Promise((resolve, reject) => {
-    fn(req, res, (result: any) => {
+    fn(req, res, (result?: Error) => {
       if (result instanceof Error) {
         return reject(result);
       }

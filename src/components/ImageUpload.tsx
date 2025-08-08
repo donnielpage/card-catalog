@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 
 interface ImageUploadProps {
   currentImage?: string;
@@ -121,10 +122,12 @@ export default function ImageUpload({ currentImage, onImageChange, disabled, all
       {/* Preview */}
       {previewUrl && (
         <div className="relative inline-block">
-          <img
+          <Image
             src={previewUrl}
             alt="Card preview"
-            className="w-32 h-48 object-cover rounded-lg border border-gray-300"
+            width={128}
+            height={192}
+            className="object-cover rounded-lg border border-gray-300"
           />
           {!disabled && (
             <button

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions, canManageUsers } from '@/lib/auth';
 import Database from '@/lib/database';
+import bcrypt from 'bcryptjs';
 
 export async function PUT(
   request: NextRequest,
@@ -43,7 +44,6 @@ export async function PUT(
 
     // If password is provided, hash and update it
     if (password) {
-      const bcrypt = require('bcryptjs');
       const passwordHash = await bcrypt.hash(password, 12);
       updateQuery = 'UPDATE users SET username = ?, email = ?, firstname = ?, lastname = ?, role = ?, password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?';
       params_array = [username, email, firstname, lastname, role, passwordHash, userId];
