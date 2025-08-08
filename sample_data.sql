@@ -60,8 +60,12 @@ INSERT INTO players (firstname, lastname, dob) VALUES
 
 -- Insert sample cards
 INSERT INTO cards (cardnumber, playerid, teamid, manufacturerid, year, condition, notes) VALUES 
-('1', 1, 1, 1, 1993, 'Near Mint', 'Rookie card in excellent condition'),
-('23', 2, 2, 2, 1941, 'Very Good', 'Classic Ted Williams card'),
+('2', 1, 35, 1, 1993, 'Near Mint', 'Derek Jeter rookie card in excellent condition'),
+('23', 2, 34, 2, 1941, 'Very Good', 'Classic Ted Williams card'),
 ('3', 3, 1, 1, 1927, 'Good', 'Vintage Babe Ruth card - some wear'),
 ('7', 4, 1, 1, 1952, 'Excellent', 'Mickey Mantle rookie year'),
 ('24', 5, 5, 2, 1951, 'Near Mint', 'Say Hey Kid rookie card');
+
+-- Insert admin user
+INSERT INTO users (username, email, firstname, lastname, password_hash, role) VALUES 
+('admin', 'admin@cardvault.com', 'Admin', 'User', '$2b$12$lObinT/d5hSSaiiiRDMSt.my82WpG8fE7BT22dUjNHeIY3H6LraCi', 'admin');

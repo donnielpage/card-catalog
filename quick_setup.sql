@@ -42,6 +42,19 @@ CREATE TABLE cards (
     FOREIGN KEY (manufacturerid) REFERENCES manufacturers(id)
 );
 
+-- Create users table for authentication
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
+    firstname TEXT NOT NULL,
+    lastname TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('user', 'manager', 'admin')),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create sessions table for NextAuth
 CREATE TABLE sessions (
     id TEXT PRIMARY KEY,
@@ -75,7 +88,8 @@ INSERT INTO players (firstname, lastname, dob) VALUES
 
 -- Add sample cards
 INSERT INTO cards (cardnumber, playerid, teamid, manufacturerid, year, condition, notes) VALUES 
+('2', 1, 2, 1, 1993, 'Near Mint', 'Derek Jeter rookie card'),
 ('23', 2, 1, 2, 1941, 'Very Good', 'Classic Ted Williams card');
 
--- Add test user
-INSERT INTO users (username, email, firstname, lastname, password_hash, role) VALUES ('test', 'test@cardvault.com', 'Test', 'User', '$2b$12$lObinT/d5hSSaiiiRDMSt.my82WpG8fE7BT22dUjNHeIY3H6LraCi', 'user');
+-- Add admin user only
+INSERT INTO users (username, email, firstname, lastname, password_hash, role) VALUES ('admin', 'admin@cardvault.com', 'Admin', 'User', '$2b$12$lObinT/d5hSSaiiiRDMSt.my82WpG8fE7BT22dUjNHeIY3H6LraCi', 'admin');

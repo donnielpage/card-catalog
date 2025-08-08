@@ -279,8 +279,13 @@ main() {
     read -p "Would you like to start the application now? (y/n): " -n 1 -r
     echo ""
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        print_info "Starting $APP_NAME..."
-        ./start.sh
+        print_info "Starting $APP_NAME in background..."
+        nohup ./start.sh > server.log 2>&1 &
+        sleep 2
+        print_success "Server started successfully!"
+        print_info "Server is running in background (PID: $!)"
+        print_info "Logs are being written to: server.log"
+        print_info "To stop the server, use: pkill -f 'next start'"
     else
         print_info "You can start the application later using: ./start.sh"
     fi
