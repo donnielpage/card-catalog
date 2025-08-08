@@ -16,6 +16,7 @@ const storage = multer.diskStorage({
 });
 
 // File filter to only allow images
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
