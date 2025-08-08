@@ -6,8 +6,9 @@ import bcrypt from 'bcryptjs';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const session = await getServerSession(authOptions);
   
   if (!session || !canManageUsers(session.user.role)) {
@@ -67,8 +68,9 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const session = await getServerSession(authOptions);
   
   if (!session || !canManageUsers(session.user.role)) {
