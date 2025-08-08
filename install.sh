@@ -166,6 +166,12 @@ create_install_date() {
 initialize_database() {
     print_info "Initializing database..."
     
+    # Remove existing database for truly fresh install
+    if [ -f "carddb.sqlite" ]; then
+        print_warning "Removing existing database for fresh install..."
+        rm carddb.sqlite
+    fi
+    
     if [ -f "create_database.sql" ]; then
         if command_exists sqlite3; then
             sqlite3 carddb.sqlite < create_database.sql

@@ -40,4 +40,23 @@ echo "   ⚙️  Full CRUD management for all data tables"
 echo "   🧮 Summary statistics including cards by manufacturer & year"
 echo "   🔍 Advanced filtering on Cards page (manufacturer+year, player, team, search)"
 echo ""
-npm start
+# Start the application in background with nohup
+nohup npm start > server.log 2>&1 &
+
+# Get the process ID
+PID=$!
+
+# Wait a moment to check if the process started successfully
+sleep 3
+
+if ps -p $PID > /dev/null; then
+    echo "✅ Card Catalog started successfully in background"
+    echo "✅ Process ID: $PID"
+    echo "✅ Server logs: server.log"
+    echo "✅ To stop the server, run: pkill -f 'next start'"
+    echo ""
+    echo "🎉 Card Catalog is now running!"
+else
+    echo "❌ Failed to start Card Catalog. Check server.log for errors."
+    exit 1
+fi
