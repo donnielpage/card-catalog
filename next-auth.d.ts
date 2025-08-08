@@ -7,6 +7,8 @@ declare module "next-auth" {
       username: string;
       email: string;
       role: string;
+      favorite_team_id?: number;
+      favorite_player_id?: number;
     };
   }
 
@@ -15,6 +17,8 @@ declare module "next-auth" {
     username: string;
     email: string;
     role: string;
+    favorite_team_id?: number;
+    favorite_player_id?: number;
   }
 }
 
