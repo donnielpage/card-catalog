@@ -142,7 +142,7 @@ install_dependencies() {
     print_info "Installing dependencies..."
     
     if [ -f "package.json" ]; then
-        if npm ci --only=production --silent; then
+        if npm ci --silent; then
             print_success "Dependencies installed successfully"
         else
             print_error "Failed to install dependencies"
