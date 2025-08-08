@@ -91,5 +91,5 @@ INSERT INTO cards (cardnumber, playerid, teamid, manufacturerid, year, condition
 ('2', 1, 2, 1, 1993, 'Near Mint', 'Derek Jeter rookie card'),
 ('23', 2, 1, 2, 1941, 'Very Good', 'Classic Ted Williams card');
 
--- Add admin user only
-INSERT INTO users (username, email, firstname, lastname, password_hash, role) VALUES ('admin', 'admin@cardvault.com', 'Admin', 'User', '$2b$12$lObinT/d5hSSaiiiRDMSt.my82WpG8fE7BT22dUjNHeIY3H6LraCi', 'admin');
+-- Add admin user only (ignore if already exists)
+INSERT OR IGNORE INTO users (username, email, firstname, lastname, password_hash, role) VALUES ('admin', 'admin@cardvault.com', 'Admin', 'User', '$2b$12$lObinT/d5hSSaiiiRDMSt.my82WpG8fE7BT22dUjNHeIY3H6LraCi', 'admin');
