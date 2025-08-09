@@ -328,3 +328,27 @@ https://next-auth.js.org/warnings#nextauth_url
  ✓ Compiled (486 modules)
  GET /api/teams/83 200 in 248ms
  GET /api/cards 200 in 248ms
+ ✓ Compiled /api/auth/[...nextauth] in 364ms (702 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/session 200 in 480ms
+ ✓ Compiled in 85ms (318 modules)
+ GET / 200 in 62ms
+ ✓ Compiled in 53ms (318 modules)
+ GET / 200 in 7ms
+ ✓ Compiled in 47ms (318 modules)
+ GET / 200 in 7ms
+ ✓ Compiled in 45ms (318 modules)
+ GET / 200 in 5ms
+ ✓ Compiled in 164ms (780 modules)
+ GET / 200 in 103ms
+ ✓ Compiled in 47ms (318 modules)
+ GET / 200 in 8ms
+ ✓ Compiled in 147ms (780 modules)
+ GET / 200 in 60ms
+ ✓ Compiled /api/cards in 36ms (484 modules)
+ ✓ Compiled (486 modules)
+ GET /api/teams/83 200 in 193ms
+ GET /api/cards 200 in 194ms
+ ✓ Compiled in 109ms (804 modules)
+ GET / 200 in 64ms

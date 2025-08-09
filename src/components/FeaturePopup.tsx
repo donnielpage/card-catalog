@@ -15,18 +15,19 @@ interface FeatureAnnouncement {
 
 const FEATURE_ANNOUNCEMENTS: FeatureAnnouncement[] = [
   {
-    id: 'system-management-v1.1.0',
-    version: '1.1.0-rc',
-    title: 'New System Management Interface',
-    description: 'Administrators can now manage the system directly from the web interface!',
+    id: 'secure-admin-setup-v2.0.0',
+    version: '2.0.0-rc',
+    title: 'Enhanced Security & System Management',
+    description: 'Major security improvements and comprehensive system management tools!',
     features: [
+      'Secure admin password setup during installation',
+      'No more default credentials - each install is unique',
+      'Web-based system management interface for admins',
       'Create database, image, and full system backups',
       'Monitor server status and system information',
-      'Check for version updates',
-      'View backup history and system metrics',
-      'No more command line required for system tasks'
+      'Check for version updates from the web interface'
     ],
-    icon: '🔧',
+    icon: '🔒',
     date: '2025-08-09',
     priority: 'high'
   }
