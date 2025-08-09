@@ -16,7 +16,7 @@ interface FeatureAnnouncement {
 const FEATURE_ANNOUNCEMENTS: FeatureAnnouncement[] = [
   {
     id: 'system-management-v1.1.0',
-    version: '1.1.0',
+    version: '1.1.0-rc',
     title: 'New System Management Interface',
     description: 'Administrators can now manage the system directly from the web interface!',
     features: [

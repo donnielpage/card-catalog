@@ -25,7 +25,7 @@ export default function Dashboard() {
   const [allCards, setAllCards] = useState<CardWithDetails[]>([]);
   const [filteredCards, setFilteredCards] = useState<CardWithDetails[]>([]);
   const [cardsLoading, setCardsLoading] = useState(true);
-  const [appVersion, setAppVersion] = useState('1.1.0');
+  const [appVersion, setAppVersion] = useState('1.1.0-rc');
 
   const fetchCards = useCallback(async () => {
     setCardsLoading(true);
