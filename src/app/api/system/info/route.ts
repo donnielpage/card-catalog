@@ -70,7 +70,7 @@ export async function GET() {
     }
 
     // Check server status (look for both dev and production processes)
-    let serverStatus = { running: false, pid: null };
+    let serverStatus: { running: boolean; pid: string | null } = { running: false, pid: null };
     try {
       // Check for both dev server and production server
       let processes = '';
@@ -92,7 +92,7 @@ export async function GET() {
       }
       
       if (processes) {
-        const pid = processes.split(/\s+/)[1];
+        const pid = processes.split(/\s+/)[1] || null;
         serverStatus = { running: true, pid };
       }
     } catch (error) {

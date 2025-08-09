@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import AuthGuard from '@/components/AuthGuard';
+import { useRouter } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 
 interface SystemInfo {
@@ -43,21 +43,34 @@ interface VersionInfo {
 }
 
 export default function SystemManagementPage() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
   const [backups, setBackups] = useState<BackupLists | null>(null);
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [backupLoading, setBackupLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
+  const [currentPage, setCurrentPage] = useState('system-management');
 
   useEffect(() => {
-    if (session?.user.role === 'admin') {
-      loadSystemInfo();
-      loadBackups();
-      loadVersionInfo();
+    if (status === 'loading') return; // Still loading session
+    
+    if (!session) {
+      router.push('/auth/signin');
+      return;
     }
-  }, [session]);
+    
+    if (session.user.role !== 'admin') {
+      router.push('/'); // Redirect non-admins to dashboard
+      return;
+    }
+    
+    // User is admin, load data
+    loadSystemInfo();
+    loadBackups();
+    loadVersionInfo();
+  }, [session, status, router]);
 
   const loadSystemInfo = async () => {
     try {
@@ -130,7 +143,7 @@ export default function SystemManagementPage() {
     }
   };
 
-  if (loading) {
+  if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -141,10 +154,25 @@ export default function SystemManagementPage() {
     );
   }
 
+  if (!session || session.user.role !== 'admin') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">Access denied. Admin privileges required.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const handlePageChange = (page: string) => {
+    if (page !== 'system-management') {
+      router.push('/');
+    }
+  };
+
   return (
-    <AuthGuard requiredRole="admin">
-      <div className="min-h-screen bg-gray-50">
-        <Navigation />
+    <div className="min-h-screen bg-gray-50">
+        <Navigation currentPage={currentPage} onPageChange={handlePageChange} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900">System Management</h1>
@@ -345,6 +373,5 @@ export default function SystemManagementPage() {
           </div>
         </div>
       </div>
-    </AuthGuard>
   );
 }
