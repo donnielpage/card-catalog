@@ -41,12 +41,12 @@ export default function Footer() {
         <div className="py-4">
           <div className="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600 space-y-2 sm:space-y-0">
             <div className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-6">
-              <span>Card Catalog v{appInfo.version}</span>
+              <span>CardVault v{appInfo.version}</span>
               <span className="hidden sm:inline">•</span>
               <span>Installed: {formatDate(appInfo.installDate)}</span>
             </div>
             <div>
-              <span>© 2025 Card Catalog. All rights reserved.</span>
+              <span>© 2025 CardVault. All rights reserved.</span>
             </div>
           </div>
         </div>
