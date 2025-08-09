@@ -211,3 +211,5 @@ https://next-auth.js.org/warnings#nextauth_url
  GET /api/teams/83 200 in 7ms
  GET /api/teams/83 200 in 8ms
  GET /api/cards 200 in 8ms
+ GET /api/auth/session 200 in 7ms
+ GET /api/auth/session 200 in 4ms
