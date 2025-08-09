@@ -16,9 +16,8 @@ export default function Navigation({ currentPage, onPageChange }: NavigationProp
   const [userTeam, setUserTeam] = useState<Team | null>(null);
   
   const handleSignOut = () => {
-    // Use current host for callback URL instead of hardcoded localhost
-    const baseUrl = window.location.origin;
-    signOut({ callbackUrl: `${baseUrl}/auth/signin` });
+    // Let NextAuth handle the redirect using the configured signOut page
+    signOut();
   };
 
   // Fetch user's favorite team colors
