@@ -162,6 +162,59 @@ create_install_date() {
     print_success "Install date recorded"
 }
 
+# Create admin user with custom password
+create_admin_user() {
+    print_info "Setting up admin user..."
+    echo ""
+    echo "🔐 Admin Account Setup"
+    echo "Please create a secure password for the admin account."
+    echo ""
+    
+    # Get admin password
+    while true; do
+        read -s -p "Enter admin password: " admin_password
+        echo ""
+        read -s -p "Confirm admin password: " admin_password_confirm
+        echo ""
+        
+        if [ "$admin_password" = "$admin_password_confirm" ]; then
+            if [ ${#admin_password} -lt 8 ]; then
+                print_warning "Password must be at least 8 characters long"
+                echo ""
+                continue
+            fi
+            break
+        else
+            print_warning "Passwords do not match. Please try again."
+            echo ""
+        fi
+    done
+    
+    # Generate password hash using Node.js
+    print_info "Generating secure password hash..."
+    local password_hash
+    password_hash=$(node -e "
+        const bcrypt = require('bcryptjs');
+        const hash = bcrypt.hashSync('$admin_password', 12);
+        console.log(hash);
+    ")
+    
+    if [ $? -eq 0 ] && [ -n "$password_hash" ]; then
+        # Insert admin user into database
+        sqlite3 carddb.sqlite "INSERT INTO users (username, email, firstname, lastname, password_hash, role) VALUES ('admin', 'admin@cardvault.com', 'Admin', 'User', '$password_hash', 'admin');"
+        print_success "Admin user created successfully"
+        echo ""
+        print_info "Admin login credentials:"
+        print_info "  Username: admin"
+        print_info "  Password: [the password you just set]"
+    else
+        print_error "Failed to generate password hash"
+        exit 1
+    fi
+    
+    echo ""
+}
+
 # Initialize database
 initialize_database() {
     print_info "Initializing database..."
@@ -177,12 +230,16 @@ initialize_database() {
             sqlite3 carddb.sqlite < create_database.sql
             print_success "Database initialized"
             
+            # Create admin user with custom password
+            create_admin_user
+            
             # Check if sample data should be loaded
             read -p "Would you like to load sample data? (y/n): " -n 1 -r
             echo ""
             if [[ $REPLY =~ ^[Yy]$ ]]; then
                 if [ -f "sample_data.sql" ]; then
-                    sqlite3 carddb.sqlite < sample_data.sql
+                    # Load sample data but skip admin user (already created)
+                    grep -v "INSERT.*admin.*cardvault.com" sample_data.sql | sqlite3 carddb.sqlite
                     print_success "Sample data loaded"
                 else
                     print_warning "Sample data file not found"

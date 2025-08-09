@@ -50,10 +50,9 @@ Key configurations:
 - `NEXTAUTH_SECRET`: Secure secret for authentication
 - `NEXTAUTH_URL`: Set specific URL if needed (auto-detected by default)
 
-## Default Login
+## Admin Access
 
-- **Username**: admin
-- **Password**: password123
+Admin credentials are set during installation. The installer will prompt you to create a secure admin password.
 
 ## Database
 

@@ -66,6 +66,4 @@ INSERT INTO cards (cardnumber, playerid, teamid, manufacturerid, year, condition
 ('7', 4, 1, 1, 1952, 'Excellent', 'Mickey Mantle rookie year'),
 ('24', 5, 5, 2, 1951, 'Near Mint', 'Say Hey Kid rookie card');
 
--- Insert admin user (ignore if already exists)
-INSERT OR IGNORE INTO users (username, email, firstname, lastname, password_hash, role) VALUES 
-('admin', 'admin@cardvault.com', 'Admin', 'User', '$2b$12$lObinT/d5hSSaiiiRDMSt.my82WpG8fE7BT22dUjNHeIY3H6LraCi', 'admin');
+-- Admin user is created during installation with custom password
