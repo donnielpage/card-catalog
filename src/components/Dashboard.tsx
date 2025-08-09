@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useSession } from 'next-auth/react';
 import Navigation from '@/components/Navigation';
 import CardList from '@/components/CardList';
 import CardForm from '@/components/CardForm';
@@ -8,11 +9,14 @@ import CardReports from '@/components/CardReports';
 import ManageData from '@/components/ManageData';
 import UserManagement from '@/components/UserManagement';
 import UserProfile from '@/components/UserProfile';
+import SystemManagement from '@/components/SystemManagement';
 import CardFilters from '@/components/CardFilters';
+import FeaturePopup from '@/components/FeaturePopup';
 import { Card, CardWithDetails } from '@/lib/types';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function Dashboard() {
+  const { data: session } = useSession();
   const { canCreate, canModify, canManageUsers } = useAuth();
   const [currentPage, setCurrentPage] = useState('cards');
   const [showForm, setShowForm] = useState(false);
@@ -21,6 +25,7 @@ export default function Dashboard() {
   const [allCards, setAllCards] = useState<CardWithDetails[]>([]);
   const [filteredCards, setFilteredCards] = useState<CardWithDetails[]>([]);
   const [cardsLoading, setCardsLoading] = useState(true);
+  const [appVersion, setAppVersion] = useState('1.1.0');
 
   const fetchCards = useCallback(async () => {
     setCardsLoading(true);
@@ -160,6 +165,8 @@ export default function Dashboard() {
         return <ManageData />;
       case 'users':
         return canManageUsers ? <UserManagement /> : <div className="text-center py-8 text-red-600">Access denied. Admin privileges required.</div>;
+      case 'system-management':
+        return session?.user?.role === 'admin' ? <SystemManagement /> : <div className="text-center py-8 text-red-600">Access denied. Admin privileges required.</div>;
       case 'profile':
         return <UserProfile />;
       default:
@@ -187,6 +194,9 @@ export default function Dashboard() {
           />
         )}
       </div>
+
+      {/* Feature Popup */}
+      <FeaturePopup currentVersion={appVersion} />
     </div>
   );
 }

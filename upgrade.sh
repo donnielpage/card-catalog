@@ -212,10 +212,14 @@ main() {
     
     # Confirm upgrade
     print_warning "This will update your Card Catalog installation to the latest version."
+    echo ""
+    print_info "💡 Tip: Use './system-manager.sh' to create backups before upgrading"
+    echo ""
     read -p "Do you want to continue? (y/n): " -n 1 -r
     echo ""
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         print_info "Upgrade cancelled."
+        print_info "Run './system-manager.sh' for backup and system management options"
         exit 0
     fi
     

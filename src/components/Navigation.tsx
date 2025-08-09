@@ -151,6 +151,19 @@ export default function Navigation({ currentPage, onPageChange }: NavigationProp
                     <span>Users</span>
                   </button>
                 )}
+                {user?.role === 'admin' && (
+                  <button
+                    onClick={() => onPageChange('system-management')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 relative ${
+                      currentPage === 'system-management'
+                        ? 'text-white transform scale-105 shadow-lg bg-red-600 hover:bg-red-700'
+                        : 'text-slate-300 hover:bg-slate-600 hover:text-white hover:scale-105'
+                    }`}
+                  >
+                    <span>🔧</span>
+                    <span>System</span>
+                  </button>
+                )}
                 <button
                   onClick={() => onPageChange('profile')}
                   className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 relative ${
