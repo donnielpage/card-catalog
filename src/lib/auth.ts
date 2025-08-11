@@ -92,6 +92,12 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      // Redirect to home page after successful login
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
   },
   cookies: {
     sessionToken: {
@@ -107,7 +113,6 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/auth/signin",
-    signOut: "/auth/signin",
   },
   secret: process.env.NEXTAUTH_SECRET || "development-secret-fallback-for-builds",
 };
