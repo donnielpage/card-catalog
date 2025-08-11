@@ -20,7 +20,7 @@ export const authOptions: NextAuthOptions = {
         const db = new Database();
         try {
           const user = await db.get(
-            "SELECT id, username, email, firstname, lastname, password_hash, role, favorite_team_id, favorite_player_id, created_at, updated_at FROM users WHERE username = ?",
+            "SELECT id, username, email, firstname, lastname, password_hash, role, favorite_team_id, favorite_player_id, created_at, updated_at FROM users WHERE LOWER(username) = LOWER(?)",
             [credentials.username]
           ) as User | undefined;
 
@@ -48,7 +48,7 @@ export const authOptions: NextAuthOptions = {
             favorite_player_id: user.favorite_player_id,
           };
         } catch (error) {
-          console.error("Auth error:", error);
+          console.error("Auth error:", error instanceof Error ? error.message : 'Unknown error');
           return null;
         } finally {
           db.close();

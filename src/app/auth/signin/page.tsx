@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { signIn, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 export default function SignIn() {
   const [username, setUsername] = useState('');
@@ -47,13 +46,7 @@ export default function SignIn() {
             Sign in to CardVault
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link
-              href="/auth/signup"
-              className="font-medium text-blue-600 hover:text-blue-500"
-            >
-              create a new account
-            </Link>
+            Enter your credentials to access CardVault
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
