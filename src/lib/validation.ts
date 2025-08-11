@@ -83,7 +83,7 @@ export function validateText(text: string, fieldName: string, maxLength: number 
 }
 
 // Number validation
-export function validateNumber(value: any, fieldName: string, min?: number, max?: number): ValidationResult {
+export function validateNumber(value: unknown, fieldName: string, min?: number, max?: number): ValidationResult {
   const result = new ValidationResult();
   
   if (value !== null && value !== undefined) {
@@ -104,18 +104,20 @@ export function validateNumber(value: any, fieldName: string, min?: number, max?
 }
 
 // Card validation
-export function validateCard(card: any): ValidationResult {
+export function validateCard(card: Record<string, unknown>): ValidationResult {
   const result = new ValidationResult();
   
   // Validate required fields
   if (!card.card_number) {
     result.addError('card_number', 'Card number is required');
-  } else {
+  } else if (typeof card.card_number === 'string') {
     const cardNumResult = validateText(card.card_number, 'Card number', 50);
     if (!cardNumResult.isValid) {
       result.errors.push(...cardNumResult.errors);
       result.isValid = false;
     }
+  } else {
+    result.addError('card_number', 'Card number must be a string');
   }
   
   // Validate year
@@ -128,20 +130,24 @@ export function validateCard(card: any): ValidationResult {
   }
   
   // Validate condition
-  if (card.condition) {
+  if (card.condition && typeof card.condition === 'string') {
     const validConditions = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent', 'Near Mint', 'Mint'];
     if (!validConditions.includes(card.condition)) {
       result.addError('condition', 'Invalid card condition');
     }
+  } else if (card.condition) {
+    result.addError('condition', 'Condition must be a string');
   }
   
   // Validate notes length
-  if (card.notes) {
+  if (card.notes && typeof card.notes === 'string') {
     const notesResult = validateText(card.notes, 'Notes', 1000);
     if (!notesResult.isValid) {
       result.errors.push(...notesResult.errors);
       result.isValid = false;
     }
+  } else if (card.notes) {
+    result.addError('notes', 'Notes must be a string');
   }
   
   // Validate IDs are positive integers
@@ -159,36 +165,44 @@ export function validateCard(card: any): ValidationResult {
 }
 
 // User validation
-export function validateUser(user: any): ValidationResult {
+export function validateUser(user: Record<string, unknown>): ValidationResult {
   const result = new ValidationResult();
   
   // Validate username
-  const usernameResult = validateUsername(user.username);
-  if (!usernameResult.isValid) {
-    result.errors.push(...usernameResult.errors);
-    result.isValid = false;
+  if (typeof user.username === 'string') {
+    const usernameResult = validateUsername(user.username);
+    if (!usernameResult.isValid) {
+      result.errors.push(...usernameResult.errors);
+      result.isValid = false;
+    }
+  } else {
+    result.addError('username', 'Username must be a string');
   }
   
   // Validate email
-  if (!user.email || !validateEmail(user.email)) {
+  if (!user.email || typeof user.email !== 'string' || !validateEmail(user.email)) {
     result.addError('email', 'Valid email address is required');
   }
   
   // Validate names
   ['firstname', 'lastname'].forEach(field => {
-    if (user[field]) {
-      const nameResult = validateText(user[field], field, 100);
+    if (user[field] && typeof user[field] === 'string') {
+      const nameResult = validateText(user[field] as string, field, 100);
       if (!nameResult.isValid) {
         result.errors.push(...nameResult.errors);
         result.isValid = false;
       }
+    } else if (user[field]) {
+      result.addError(field, `${field} must be a string`);
     }
   });
   
   // Validate role
   const validRoles = ['admin', 'manager', 'user'];
-  if (user.role && !validRoles.includes(user.role)) {
+  if (user.role && typeof user.role === 'string' && !validRoles.includes(user.role)) {
     result.addError('role', 'Invalid user role');
+  } else if (user.role && typeof user.role !== 'string') {
+    result.addError('role', 'Role must be a string');
   }
   
   return result;

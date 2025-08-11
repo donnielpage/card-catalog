@@ -27,6 +27,15 @@ export async function GET() {
       installDate = 'Unknown';
     }
 
+    // Get upgrade date
+    let upgradeDate = null;
+    try {
+      const upgradeDatePath = join(process.cwd(), '.upgrade_date');
+      upgradeDate = readFileSync(upgradeDatePath, 'utf8').trim();
+    } catch {
+      upgradeDate = null;
+    }
+
     // Get database info
     let databaseInfo = { exists: false, size: '0B', modified: 'Unknown' };
     try {
@@ -116,6 +125,7 @@ export async function GET() {
     return NextResponse.json({
       version,
       installDate,
+      upgradeDate,
       database: databaseInfo,
       images: imageInfo,
       server: serverStatus

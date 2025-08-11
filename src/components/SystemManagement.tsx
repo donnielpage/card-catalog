@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { ChangelogEntry } from '@/lib/changelog';
 
 interface SystemInfo {
   version: string;
   installDate: string;
+  upgradeDate: string | null;
   database: {
     exists: boolean;
     size: string;
@@ -45,6 +47,7 @@ export default function SystemManagement() {
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
   const [backups, setBackups] = useState<BackupLists | null>(null);
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
+  const [changelog, setChangelog] = useState<ChangelogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [backupLoading, setBackupLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
@@ -54,6 +57,7 @@ export default function SystemManagement() {
       loadSystemInfo();
       loadBackups();
       loadVersionInfo();
+      loadChangelog();
     }
   }, [session]);
 
@@ -91,6 +95,18 @@ export default function SystemManagement() {
       }
     } catch (error) {
       console.error('Error loading version info:', error);
+    }
+  };
+
+  const loadChangelog = async () => {
+    try {
+      const response = await fetch('/api/system/changelog?limit=10');
+      if (response.ok) {
+        const data = await response.json();
+        setChangelog(data.changelog || []);
+      }
+    } catch (error) {
+      console.error('Error loading changelog:', error);
     }
   };
 
@@ -166,6 +182,9 @@ export default function SystemManagement() {
                 <h3 className="font-medium text-gray-900">Application</h3>
                 <p className="text-sm text-gray-600">Version: {systemInfo.version}</p>
                 <p className="text-sm text-gray-600">Installed: {formatDate(systemInfo.installDate)}</p>
+                {systemInfo.upgradeDate && (
+                  <p className="text-sm text-gray-600">Last Upgrade: {formatDate(systemInfo.upgradeDate)}</p>
+                )}
               </div>
               
               <div>
@@ -340,6 +359,109 @@ export default function SystemManagement() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Changelog Section */}
+      <div className="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">Release History</h2>
+        {changelog.length > 0 ? (
+          <div className="space-y-6">
+            {changelog.map((entry, index) => (
+              <div key={entry.version} className="border-l-4 border-blue-500 pl-6 pb-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    v{entry.version}
+                  </h3>
+                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                    entry.type === 'major' ? 'bg-red-100 text-red-800' :
+                    entry.type === 'minor' ? 'bg-blue-100 text-blue-800' :
+                    'bg-green-100 text-green-800'
+                  }`}>
+                    {entry.type}
+                  </span>
+                  <span className="text-sm text-gray-500">{entry.releaseDate}</span>
+                </div>
+                
+                <h4 className="font-medium text-gray-900 mb-2">{entry.title}</h4>
+                <p className="text-gray-600 mb-4">{entry.description}</p>
+
+                {entry.breaking && entry.breaking.length > 0 && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <h5 className="font-medium text-red-900 mb-2">🚨 Breaking Changes</h5>
+                    <ul className="list-disc list-inside text-sm text-red-800 space-y-1">
+                      {entry.breaking.map((item, i) => (
+                        <li key={i}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {entry.changes.added && entry.changes.added.length > 0 && (
+                    <div>
+                      <h5 className="font-medium text-green-900 mb-2">✨ Added</h5>
+                      <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        {entry.changes.added.map((item, i) => (
+                          <li key={i}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {entry.changes.changed && entry.changes.changed.length > 0 && (
+                    <div>
+                      <h5 className="font-medium text-blue-900 mb-2">🔄 Changed</h5>
+                      <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        {entry.changes.changed.map((item, i) => (
+                          <li key={i}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {entry.changes.fixed && entry.changes.fixed.length > 0 && (
+                    <div>
+                      <h5 className="font-medium text-purple-900 mb-2">🔧 Fixed</h5>
+                      <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        {entry.changes.fixed.map((item, i) => (
+                          <li key={i}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {entry.changes.security && entry.changes.security.length > 0 && (
+                    <div>
+                      <h5 className="font-medium text-red-900 mb-2">🔒 Security</h5>
+                      <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        {entry.changes.security.map((item, i) => (
+                          <li key={i}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {entry.changes.removed && entry.changes.removed.length > 0 && (
+                    <div>
+                      <h5 className="font-medium text-gray-900 mb-2">🗑️ Removed</h5>
+                      <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        {entry.changes.removed.map((item, i) => (
+                          <li key={i}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                {index < changelog.length - 1 && (
+                  <div className="mt-6 border-b border-gray-200"></div>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500">No release history available.</p>
+        )}
       </div>
     </div>
   );
