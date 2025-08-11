@@ -51,6 +51,8 @@ CREATE TABLE IF NOT EXISTS users (
     lastname TEXT NOT NULL,
     password_hash TEXT NOT NULL,
     role TEXT NOT NULL CHECK (role IN ('user', 'manager', 'admin')),
+    favorite_team_id INTEGER,
+    favorite_player_id INTEGER,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
