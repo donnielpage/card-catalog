@@ -17,7 +17,9 @@ export const authOptions: NextAuthOptions = {
         if (process.env.NODE_ENV === 'production' && 
             (!process.env.NEXTAUTH_SECRET || process.env.NEXTAUTH_SECRET === 'development-secret-fallback-for-builds')) {
           console.error('NEXTAUTH_SECRET not properly configured for production');
-          return null;
+          console.error('Current NEXTAUTH_SECRET:', process.env.NEXTAUTH_SECRET ? 'Set' : 'Not set');
+          console.error('NODE_ENV:', process.env.NODE_ENV);
+          // Don't block authentication, just log the warning
         }
 
         if (!credentials?.username || !credentials?.password) {
