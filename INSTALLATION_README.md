@@ -194,6 +194,49 @@ The installer optionally includes sample baseball cards:
 
 ## 🛠️ Troubleshooting
 
+### Authentication Issues (Login Problems)
+
+If you can't log in after a fresh install, this is usually related to network configuration:
+
+#### Quick Diagnosis
+Run the authentication diagnostic tool:
+```bash
+./debug-auth.sh
+```
+
+#### Common Authentication Solutions
+
+**Problem**: Login form clears and returns to login page
+**Solution**: Set explicit NEXTAUTH_URL in `.env.local`
+```bash
+# Option 1: Auto-detect your IP
+echo "NEXTAUTH_URL=http://$(hostname -I | awk '{print $1}' | tr -d ' '):3000" >> .env.local
+
+# Option 2: Manual setup (replace with your machine's IP)
+echo "NEXTAUTH_URL=http://192.168.1.100:3000" >> .env.local
+```
+
+**Problem**: "Invalid username or password" on fresh install
+**Causes & Solutions:**
+1. **Database schema mismatch**: Ensure fresh database created
+2. **Wrong credentials**: Use exact credentials from install process
+3. **Case sensitivity**: Username is case-sensitive
+
+**Problem**: Browser shows "Cannot connect" or timeouts
+**Solutions:**
+1. **Use machine IP instead of localhost**: `http://[your-ip]:3000`
+2. **Check firewall**: Ensure port 3000 is accessible
+3. **Try different port**: Use `./start-alt.sh` for alternative port
+
+#### Network Access from Other Devices
+To access from other devices on your network:
+1. **Set NEXTAUTH_URL** to your machine's IP:
+   ```bash
+   echo "NEXTAUTH_URL=http://$(hostname -I | awk '{print $1}' | tr -d ' '):3000" >> .env.local
+   ```
+2. **Restart the application** after changing `.env.local`
+3. **Access from other devices**: `http://[your-machine-ip]:3000`
+
 ### Common Issues
 
 #### Port Already in Use
