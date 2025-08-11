@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { CardService } from '@/lib/cardService';
+import { validateCard } from '@/lib/validation';
 
 export async function GET() {
   // Require authentication to view cards
@@ -37,9 +38,20 @@ export async function POST(request: NextRequest) {
   const cardService = new CardService();
   try {
     const card = await request.json();
+    
+    // Validate input data
+    const validation = validateCard(card);
+    if (!validation.isValid) {
+      return NextResponse.json({ 
+        error: 'Validation failed', 
+        details: validation.errors 
+      }, { status: 400 });
+    }
+    
     const id = await cardService.createCard(card);
     return NextResponse.json({ id }, { status: 201 });
-  } catch (_error) {
+  } catch (error) {
+    console.error('Card creation error (no sensitive data):', error instanceof Error ? error.message : 'Unknown error');
     return NextResponse.json({ error: 'Failed to create card' }, { status: 500 });
   } finally {
     cardService.close();

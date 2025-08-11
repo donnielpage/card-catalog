@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import Database from '@/lib/database';
+import { validateUser, validatePassword } from '@/lib/validation';
 
 export async function POST(request: NextRequest) {
   const db = new Database();
@@ -12,6 +13,24 @@ export async function POST(request: NextRequest) {
         { error: 'Username, email, firstname, lastname, and password are required' },
         { status: 400 }
       );
+    }
+
+    // Validate user data
+    const userValidation = validateUser({ username, email, firstname, lastname, role });
+    if (!userValidation.isValid) {
+      return NextResponse.json({
+        error: 'Validation failed',
+        details: userValidation.errors
+      }, { status: 400 });
+    }
+
+    // Validate password strength
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      return NextResponse.json({
+        error: 'Password validation failed',
+        details: passwordValidation.errors
+      }, { status: 400 });
     }
 
     // Check if user already exists

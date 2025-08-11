@@ -18,7 +18,8 @@ export async function PUT(
 
   // Users can only update their own favorites, unless they're admin
   if (session.user.id !== id && session.user.role !== 'admin') {
-    console.log('Authorization failed:', { sessionUserId: session.user.id, paramId: id, userRole: session.user.role });
+    // Log authorization failure without sensitive data
+    console.log('Authorization failed: User attempted to update another user\'s favorites');
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
@@ -26,7 +27,8 @@ export async function PUT(
   try {
     const { favorite_team_id, favorite_player_id } = await request.json();
     
-    console.log('Updating favorites for user:', userId, { favorite_team_id, favorite_player_id });
+    // Log action without sensitive user data
+    console.log('Updating user favorites');
 
     await db.run(
       'UPDATE users SET favorite_team_id = ?, favorite_player_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',

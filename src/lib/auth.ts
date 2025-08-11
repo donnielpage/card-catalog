@@ -58,7 +58,8 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 7 * 24 * 60 * 60, // 7 days (reduced from 30 for better security)
+    updateAge: 24 * 60 * 60, // Update session every 24 hours
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -85,11 +86,28 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === 'production' ? '__Secure-next-auth.session-token' : 'next-auth.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV === 'production' ? process.env.NEXTAUTH_URL?.split('//')[1]?.split(':')[0] : undefined
+      }
+    }
+  },
   pages: {
     signIn: "/auth/signin",
     signOut: "/auth/signin",
   },
-  secret: process.env.NEXTAUTH_SECRET || "development-secret-key",
+  secret: process.env.NEXTAUTH_SECRET || (() => {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('NEXTAUTH_SECRET must be set in production environment');
+    }
+    return "development-secret-key-change-in-production";
+  })(),
 };
 
 export const hasPermission = (userRole: string, requiredRole: string): boolean => {
