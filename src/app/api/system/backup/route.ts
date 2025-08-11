@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { copyFileSync, existsSync, mkdirSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
-import { execSync } from 'child_process';
+import { spawn } from 'child_process';
 
 export async function POST(request: NextRequest) {
   try {
@@ -88,11 +88,30 @@ async function backupImages(timestamp: string, backupDir: string) {
   const backupFile = join(backupDir, `images-backup-${timestamp}.tar.gz`);
   
   try {
-    // Use tar to create compressed backup
-    execSync(`tar -czf "${backupFile}" -C "${join(process.cwd(), 'public')}" uploads/`, { 
-      stdio: 'pipe' 
-    });
-    
+    // Use safer tar command with spawn
+    const createBackup = (): Promise<void> => {
+      return new Promise((resolve, reject) => {
+        const tar = spawn('tar', [
+          '-czf', backupFile,
+          '-C', join(process.cwd(), 'public'),
+          'uploads/'
+        ], { stdio: 'pipe' });
+
+        tar.on('close', (code) => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject(new Error(`tar process exited with code ${code}`));
+          }
+        });
+
+        tar.on('error', (error) => {
+          reject(error);
+        });
+      });
+    };
+
+    await createBackup();
     const backupSize = statSync(backupFile).size;
     
     return NextResponse.json({
@@ -111,12 +130,37 @@ async function backupSystem(timestamp: string, backupDir: string) {
   const backupFile = join(backupDir, `system-backup-${timestamp}.tar.gz`);
   
   try {
-    // Create system backup excluding unnecessary directories
-    execSync(`tar -czf "${backupFile}" --exclude='node_modules' --exclude='backups' --exclude='.git' --exclude='*.log' --exclude='.next' .`, {
-      cwd: process.cwd(),
-      stdio: 'pipe'
-    });
-    
+    // Create system backup using safer spawn approach
+    const createSystemBackup = (): Promise<void> => {
+      return new Promise((resolve, reject) => {
+        const tar = spawn('tar', [
+          '-czf', backupFile,
+          '--exclude=node_modules',
+          '--exclude=backups',
+          '--exclude=.git',
+          '--exclude=*.log',
+          '--exclude=.next',
+          '.'
+        ], { 
+          cwd: process.cwd(),
+          stdio: 'pipe' 
+        });
+
+        tar.on('close', (code) => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject(new Error(`tar process exited with code ${code}`));
+          }
+        });
+
+        tar.on('error', (error) => {
+          reject(error);
+        });
+      });
+    };
+
+    await createSystemBackup();
     const backupSize = statSync(backupFile).size;
     
     return NextResponse.json({

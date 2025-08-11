@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { readFileSync, statSync, readdirSync } from 'fs';
 import { join } from 'path';
-import { execSync } from 'child_process';
+import { spawn } from 'child_process';
 
 export async function GET() {
   try {
@@ -71,32 +71,46 @@ export async function GET() {
 
     // Check server status (look for both dev and production processes)
     let serverStatus: { running: boolean; pid: string | null } = { running: false, pid: null };
+    
     try {
-      // Check for both dev server and production server
-      let processes = '';
+      // Use safer process checking approach
+      const checkProcess = (processName: string): Promise<{ running: boolean; pid: string | null }> => {
+        return new Promise((resolve) => {
+          const ps = spawn('ps', ['aux'], { stdio: ['ignore', 'pipe', 'ignore'] });
+          const grep1 = spawn('grep', [processName], { stdio: [ps.stdout, 'pipe', 'ignore'] });
+          const grep2 = spawn('grep', ['-v', 'grep'], { stdio: [grep1.stdout, 'pipe', 'ignore'] });
+          
+          let output = '';
+          grep2.stdout.on('data', (data) => {
+            output += data.toString();
+          });
+          
+          grep2.on('close', (code) => {
+            if (code === 0 && output.trim()) {
+              const pid = output.trim().split(/\s+/)[1] || null;
+              resolve({ running: true, pid });
+            } else {
+              resolve({ running: false, pid: null });
+            }
+          });
+          
+          // Cleanup on error
+          ps.on('error', () => resolve({ running: false, pid: null }));
+          grep1.on('error', () => resolve({ running: false, pid: null }));
+          grep2.on('error', () => resolve({ running: false, pid: null }));
+        });
+      };
+
+      // Check for dev server first
+      serverStatus = await checkProcess('next dev');
       
-      try {
-        const devProcesses = execSync('ps aux | grep "next dev" | grep -v grep', { encoding: 'utf8' });
-        processes = devProcesses.trim();
-      } catch {
-        // Dev server not running, try production
-      }
-      
-      if (!processes) {
-        try {
-          const prodProcesses = execSync('ps aux | grep "next start" | grep -v grep', { encoding: 'utf8' });
-          processes = prodProcesses.trim();
-        } catch {
-          // Production server not running either
-        }
-      }
-      
-      if (processes) {
-        const pid = processes.split(/\s+/)[1] || null;
-        serverStatus = { running: true, pid };
+      // If dev server not found, check for production server
+      if (!serverStatus.running) {
+        serverStatus = await checkProcess('next start');
       }
     } catch (error) {
       console.error('Error checking server status:', error);
+      serverStatus = { running: false, pid: null };
     }
 
     return NextResponse.json({

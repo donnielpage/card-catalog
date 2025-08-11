@@ -19,9 +19,25 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid image URL' }, { status: 400 });
     }
 
-    // Extract filename from URL
+    // Extract and validate filename from URL
     const filename = path.basename(imageUrl);
-    const filepath = path.join(process.cwd(), 'public', 'uploads', filename);
+    
+    // Validate filename contains only safe characters (alphanumeric, hyphens, underscores, dots)
+    const safeFilenameRegex = /^[a-zA-Z0-9\-_.]+$/;
+    if (!safeFilenameRegex.test(filename)) {
+      return NextResponse.json({ error: 'Invalid filename format' }, { status: 400 });
+    }
+    
+    // Prevent directory traversal by ensuring the resolved path is within uploads directory
+    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+    const filepath = path.join(uploadsDir, filename);
+    const resolvedPath = path.resolve(filepath);
+    const resolvedUploadsDir = path.resolve(uploadsDir);
+    
+    // Ensure the resolved path is within the uploads directory
+    if (!resolvedPath.startsWith(resolvedUploadsDir + path.sep) && resolvedPath !== resolvedUploadsDir) {
+      return NextResponse.json({ error: 'Invalid file path' }, { status: 400 });
+    }
 
     // Check if file exists and delete it
     if (existsSync(filepath)) {

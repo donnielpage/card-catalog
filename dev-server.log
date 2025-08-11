@@ -352,3 +352,105 @@ https://next-auth.js.org/warnings#nextauth_url
  GET /api/cards 200 in 194ms
  ✓ Compiled in 109ms (804 modules)
  GET / 200 in 64ms
+ ✓ Compiled /api/auth/[...nextauth] in 269ms (719 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/session 200 in 384ms
+ GET / 200 in 145ms
+ ✓ Compiled /api/app-info in 113ms (722 modules)
+ GET /api/app-info 200 in 198ms
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/session 200 in 237ms
+ GET /api/cards 200 in 14ms
+ GET /api/teams/83 200 in 15ms
+ GET /api/teams/83 200 in 15ms
+ GET /api/cards 200 in 15ms
+ ✓ Compiled /api/system/version in 117ms (725 modules)
+ ✓ Compiled (729 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/system/backups 200 in 246ms
+ GET /api/system/backups 200 in 247ms
+ GET /api/system/info 200 in 295ms
+ GET /api/system/info 200 in 334ms
+ GET / 200 in 42ms
+ GET / 200 in 7ms
+ GET /api/system/version 200 in 658ms
+ GET /api/system/version 200 in 694ms
+ GET / 200 in 177ms
+ ✓ Compiled /favicon.ico in 371ms (788 modules)
+ GET /favicon.ico 200 in 369ms
+ GET /favicon.ico 200 in 576ms
+ GET /apple-touch-icon-precomposed.png 404 in 586ms
+ GET /apple-touch-icon.png 404 in 565ms
+ ✓ Compiled /api/auth/[...nextauth] in 203ms (702 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/session 200 in 346ms
+ GET /api/auth/session 200 in 14ms
+ GET / 200 in 139ms
+ ✓ Compiled /api/app-info in 91ms (717 modules)
+ GET /api/app-info 200 in 231ms
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/session 200 in 270ms
+ ✓ Compiled /api/teams/[id] in 106ms (720 modules)
+ ✓ Compiled (722 modules)
+ GET /api/teams/83 200 in 192ms
+ GET /api/cards 200 in 193ms
+ GET /api/cards 200 in 194ms
+ GET /api/teams/83 200 in 193ms
+ ✓ Compiled /api/teams in 133ms (724 modules)
+ ✓ Compiled (726 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/teams 200 in 243ms
+ GET /api/teams 200 in 244ms
+ GET /api/users 200 in 245ms
+ GET /api/users 200 in 246ms
+ GET /api/auth/session 200 in 20ms
+ GET /api/auth/session 200 in 16ms
+ ✓ Compiled /api/system/version in 136ms (717 modules)
+ ✓ Compiled (722 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/system/backups 200 in 248ms
+ GET /api/system/backups 200 in 252ms
+ GET /api/system/info 200 in 314ms
+ GET /api/system/info 200 in 350ms
+ GET /api/system/version 200 in 564ms
+ GET /api/system/version 200 in 645ms
+ ✓ Compiled /api/players in 73ms (725 modules)
+ ✓ Compiled (727 modules)
+ GET /api/players 200 in 163ms
+ GET /api/players 200 in 163ms
+ GET /api/teams 200 in 165ms
+ GET /api/teams 200 in 163ms
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/session 200 in 49ms
+ GET /api/auth/session 200 in 13ms
+ GET /api/auth/session 200 in 11ms
+ ✓ Compiled in 270ms (1020 modules)
+ GET / 200 in 98ms
+ ✓ Compiled in 46ms (318 modules)
+ GET / 200 in 8ms
+ ✓ Compiled in 42ms (318 modules)
+ GET / 200 in 7ms
+ ✓ Compiled in 47ms (318 modules)
+ GET / 200 in 14ms
+ ✓ Compiled in 47ms (318 modules)
+ GET / 200 in 8ms
+ ✓ Compiled in 42ms (318 modules)
+ GET / 200 in 8ms
+ ✓ Compiled in 45ms (318 modules)
+ GET / 200 in 9ms
+ ✓ Compiled in 41ms (318 modules)
+ GET / 200 in 7ms
+ ✓ Compiled in 52ms (318 modules)
+ GET / 200 in 9ms
+ ✓ Compiled in 52ms (318 modules)
+ ✓ Compiled /middleware in 221ms (426 modules)
+ GET / 200 in 6ms
+ GET / 200 in 6ms
