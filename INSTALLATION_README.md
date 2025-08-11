@@ -1,55 +1,65 @@
 # Card Catalog - Complete Installation Guide
 
-## 📦 Distribution Package
+## 📦 Installation Overview
 
-This Card Catalog application can be packaged and installed on any compatible system. The installation system includes automatic dependency checking, database setup, and service configuration.
+CardVault is a Next.js application with an automated installation system that includes dependency checking, database setup, and service configuration. Installation is done by cloning the repository and running the install script.
 
-## 🎯 Quick Installation (For End Users)
+## 🎯 Quick Installation (Recommended)
 
-### Step 1: Get the Package
-1. **Download** the distribution package: `card-catalog-installer-v1.0.0.tar.gz`
-2. **Extract** the package:
-   ```bash
-   tar -xzf card-catalog-installer-v1.0.0.tar.gz
-   cd card-catalog-installer
-   ```
-
-### Step 2: Install
-1. **Run the installer**:
-   ```bash
-   ./install.sh
-   ```
-2. **Follow the prompts** for database setup and sample data
-3. **Start the application**:
-   ```bash
-   ./start.sh
-   ```
-
-### Step 3: Access
-- Open your browser to: **http://localhost:3000**
-- Start managing your card collection!
-
-## 🔧 For Developers: Creating Distribution Packages
-
-### Create a Distribution Package
+### Step 1: Clone the Repository
 ```bash
-# From the development directory
-./create-package.sh
+git clone https://github.com/donnielpage/card-catalog.git
+cd card-catalog
 ```
 
-This creates:
-- `dist/card-catalog-installer-v1.0.0.tar.gz` (Linux/macOS)
-- `dist/card-catalog-installer-v1.0.0.zip` (Windows)
+### Step 2: Run the Installer
+```bash
+./install.sh
+```
+The installer will:
+- Check system requirements
+- Install dependencies
+- Set up the database
+- Create admin account
+- Configure environment
 
-### Package Contents
-The distribution package includes:
-- ✅ Complete source code
-- ✅ Database schema and sample data
-- ✅ Automatic installer with requirements checking
-- ✅ Multiple startup options (production/development/alternative port)
-- ✅ Comprehensive documentation
-- ✅ Uninstall script
-- ✅ Configuration files
+### Step 3: Start the Application
+```bash
+# Option 1: Development mode (recommended for most users)
+npm run dev
+
+# Option 2: Production mode
+npm start
+```
+
+### Step 4: Access
+- Open your browser to: **http://localhost:3000**
+- Log in with the admin credentials you created
+- Start managing your card collection!
+
+## 🔧 Alternative Installation Methods
+
+### Development Installation
+For developers or advanced users who want to customize the application:
+
+```bash
+# Clone repository
+git clone https://github.com/donnielpage/card-catalog.git
+cd card-catalog
+
+# Install dependencies manually
+npm install
+
+# Set up environment (copy and customize)
+cp .env.example .env.local
+# Edit .env.local with your settings
+
+# Initialize database
+sqlite3 carddb.sqlite < create_database.sql
+
+# Start in development mode
+npm run dev
+```
 
 ## 🖥️ System Requirements
 
@@ -67,83 +77,60 @@ The distribution package includes:
 - **Disk Space**: 1GB+ for comfort
 - **RAM**: 2GB+ for optimal performance
 
-## 📋 Installation Options
+## 📋 Running Options
 
-### 1. Automatic Installation (Recommended)
+### Development Mode (Recommended)
 ```bash
-./install.sh
-```
-
-**Features:**
-- ✅ Automatic requirements checking
-- ✅ Dependency installation
-- ✅ Database initialization
-- ✅ Application building
-- ✅ Service script setup
-- ✅ Port availability checking
-- ✅ Interactive setup
-
-### 2. Manual Installation
-If automatic installation fails:
-
-```bash
-# 1. Install dependencies
-npm install
-
-# 2. Initialize database
-sqlite3 carddb.sqlite < create_database.sql
-sqlite3 carddb.sqlite < sample_data.sql  # Optional
-
-# 3. Build application
-npm run build
-
-# 4. Start application
-npm start
-```
-
-### 3. Development Installation
-For development work:
-
-```bash
-# Install dependencies (including dev dependencies)
-npm install
-
-# Initialize database
-sqlite3 carddb.sqlite < create_database.sql
-
-# Start in development mode
 npm run dev
 ```
-
-## 🚀 Running the Application
-
-### Production Mode (Recommended)
-```bash
-./start.sh                 # Port 3000
-```
-- Optimized performance
-- Production build
-- Automatic port detection
-
-### Development Mode
-```bash
-./dev.sh                   # Port 3000 with hot reload
-```
+**Best for:**
+- Personal use
+- Testing and evaluation
+- Development work
+- Better error reporting
 - Hot reloading
-- Development tools
-- Better debugging
+
+### Production Mode
+```bash
+npm run build
+npm start
+```
+**Best for:**
+- Server deployments
+- Performance-critical environments
+- Multiple concurrent users
 
 ### Alternative Port
 ```bash
 ./start-alt.sh             # Finds available port automatically
+PORT=4000 npm run dev       # Custom port
 ```
-- Useful when port 3000 is busy
-- Tries ports 3001, 3002, etc.
 
-### Custom Port
-```bash
-PORT=4000 npm start        # Custom port
-```
+## 🌐 Network Access
+
+### Local Access
+After installation, access your application at:
+- **http://localhost:3000** (if using default port)
+- **http://localhost:3001** (if port 3000 is busy)
+
+### Network Access from Other Devices
+To access from other devices on your network:
+
+1. **Find your machine's IP address:**
+   ```bash
+   # On Linux/macOS
+   ip addr show | grep "inet " | grep -v 127.0.0.1
+   # or
+   ifconfig | grep "inet " | grep -v 127.0.0.1
+   ```
+
+2. **Set NEXTAUTH_URL in .env.local:**
+   ```bash
+   echo "NEXTAUTH_URL=http://YOUR-MACHINE-IP:3000" >> .env.local
+   ```
+
+3. **Restart the application** and access from other devices at:
+   **http://YOUR-MACHINE-IP:3000**
 
 ## 🗄️ Database Management
 
@@ -222,11 +209,24 @@ echo "NEXTAUTH_URL=http://192.168.1.100:3000" >> .env.local
 2. **Wrong credentials**: Use exact credentials from install process
 3. **Case sensitivity**: Username is case-sensitive
 
+**Problem**: 404 errors on authentication requests (production mode)
+**Solution**: Rebuild after updating code
+```bash
+npm run build
+npm start
+```
+
+**Problem**: Authentication works in dev mode but not production mode
+**Solution**: Use development mode for most users
+```bash
+npm run dev  # Recommended for personal use
+```
+
 **Problem**: Browser shows "Cannot connect" or timeouts
 **Solutions:**
 1. **Use machine IP instead of localhost**: `http://[your-ip]:3000`
 2. **Check firewall**: Ensure port 3000 is accessible
-3. **Try different port**: Use `./start-alt.sh` for alternative port
+3. **Try different port**: `PORT=3001 npm run dev`
 
 #### Network Access from Other Devices
 To access from other devices on your network:
