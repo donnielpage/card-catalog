@@ -162,6 +162,37 @@ create_install_date() {
     print_success "Install date recorded"
 }
 
+# Setup environment configuration
+setup_environment() {
+    print_info "Setting up environment configuration..."
+    
+    if [ ! -f ".env.local" ]; then
+        # Generate a random secret for NextAuth
+        local nextauth_secret
+        if command_exists openssl; then
+            nextauth_secret=$(openssl rand -base64 32)
+        elif command_exists node; then
+            nextauth_secret=$(node -e "console.log(require('crypto').randomBytes(32).toString('base64'))")
+        else
+            # Fallback to a unique but less secure method
+            nextauth_secret="cardvault-$(date +%s)-$(hostname | tr -d '[:space:]')"
+        fi
+        
+        # Create .env.local file
+        cat > .env.local << EOF
+NEXTAUTH_SECRET=$nextauth_secret
+# NEXTAUTH_URL will be automatically detected when not set
+# Uncomment and modify the line below if you need to set a specific URL:
+# NEXTAUTH_URL=http://your-server-ip:3000
+EOF
+        print_success "Environment configuration created"
+    else
+        print_success "Environment configuration already exists"
+    fi
+    
+    echo ""
+}
+
 # Create admin user with custom password
 create_admin_user() {
     print_info "Setting up admin user..."
@@ -195,9 +226,9 @@ create_admin_user() {
     local password_hash
     password_hash=$(node -e "
         const bcrypt = require('bcryptjs');
-        const hash = bcrypt.hashSync('$admin_password', 12);
+        const hash = bcrypt.hashSync(process.argv[1], 12);
         console.log(hash);
-    ")
+    " "$admin_password")
     
     if [ $? -eq 0 ] && [ -n "$password_hash" ]; then
         # Insert admin user into database
@@ -261,7 +292,24 @@ initialize_database() {
 build_application() {
     print_info "Building application..."
     
-    if npm run build --silent; then
+    # Load and export NEXTAUTH_SECRET for the build process
+    if [ -f ".env.local" ]; then
+        local nextauth_secret
+        nextauth_secret=$(grep '^NEXTAUTH_SECRET=' .env.local | cut -d'=' -f2-)
+        if [ -n "$nextauth_secret" ]; then
+            export NEXTAUTH_SECRET="$nextauth_secret"
+            export BUILDING="true"
+            print_info "NEXTAUTH_SECRET loaded for build process"
+        else
+            print_error "NEXTAUTH_SECRET not found in .env.local"
+            exit 1
+        fi
+    else
+        print_error ".env.local file not found"
+        exit 1
+    fi
+    
+    if NEXTAUTH_SECRET="$nextauth_secret" BUILDING="true" npm run build; then
         print_success "Application built successfully"
     else
         print_error "Failed to build application"
@@ -314,6 +362,7 @@ main() {
     check_requirements
     install_dependencies
     create_install_date
+    setup_environment
     initialize_database
     build_application
     create_service_scripts

@@ -13,6 +13,13 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
+        // Runtime security check: ensure proper secret is set in production
+        if (process.env.NODE_ENV === 'production' && 
+            (!process.env.NEXTAUTH_SECRET || process.env.NEXTAUTH_SECRET === 'development-secret-fallback-for-builds')) {
+          console.error('NEXTAUTH_SECRET not properly configured for production');
+          return null;
+        }
+
         if (!credentials?.username || !credentials?.password) {
           return null;
         }
@@ -102,12 +109,7 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/signin",
     signOut: "/auth/signin",
   },
-  secret: process.env.NEXTAUTH_SECRET || (() => {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('NEXTAUTH_SECRET must be set in production environment');
-    }
-    return "development-secret-key-change-in-production";
-  })(),
+  secret: process.env.NEXTAUTH_SECRET || "development-secret-fallback-for-builds",
 };
 
 export const hasPermission = (userRole: string, requiredRole: string): boolean => {
