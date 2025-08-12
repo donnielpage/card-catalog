@@ -44,8 +44,18 @@ if [ -f ".env.production" ]; then
     set +a  # Stop exporting
     echo "🔧 Using NEXTAUTH_URL from .env.production: $NEXTAUTH_URL"
 else
-    # Detect network IP for NEXTAUTH_URL as fallback
-    NETWORK_IP=$(ifconfig | grep "inet " | grep -v 127.0.0.1 | head -1 | awk '{print $2}' || echo "localhost")
+    # Detect network IP for NEXTAUTH_URL as fallback (cross-platform)
+    if command -v ip >/dev/null 2>&1; then
+        # Linux systems with 'ip' command
+        NETWORK_IP=$(ip route get 8.8.8.8 2>/dev/null | grep -oP 'src \K\S+' || echo "localhost")
+    elif command -v ifconfig >/dev/null 2>&1; then
+        # macOS/older Linux with ifconfig
+        NETWORK_IP=$(ifconfig | grep "inet " | grep -v 127.0.0.1 | head -1 | awk '{print $2}' || echo "localhost")
+    else
+        # Fallback
+        NETWORK_IP="localhost"
+        echo "⚠️  Could not detect network IP, using localhost"
+    fi
     export NEXTAUTH_URL="http://${NETWORK_IP}:3000"
     echo "🔧 Auto-detected NEXTAUTH_URL: $NEXTAUTH_URL"
     echo "💡 Run './configure-env.sh' to create permanent production configuration"

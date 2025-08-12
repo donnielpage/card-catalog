@@ -36,10 +36,12 @@ echo ""
 echo "4. Network Check:"
 echo "   Hostname: $(hostname)"
 echo "   IP addresses:"
-if command -v ifconfig >/dev/null 2>&1; then
+if command -v ip >/dev/null 2>&1; then
+    ip addr show | grep "inet " | grep -v 127.0.0.1 | awk '{print "     " $2}' | cut -d'/' -f1
+elif command -v ifconfig >/dev/null 2>&1; then
     ifconfig | grep "inet " | grep -v 127.0.0.1 | awk '{print "     " $2}'
-elif command -v ip >/dev/null 2>&1; then
-    ip addr show | grep "inet " | grep -v 127.0.0.1 | awk '{print "     " $2}'
+else
+    echo "     No network detection tools available"
 fi
 echo ""
 
@@ -53,7 +55,12 @@ echo ""
 echo "=== Troubleshooting Tips ==="
 echo "If authentication fails on this machine:"
 echo "1. Try setting explicit NEXTAUTH_URL in .env.local:"
-echo "   echo 'NEXTAUTH_URL=http://$(hostname -I | awk '{print $1}'):3000' >> .env.local"
+if command -v ip >/dev/null 2>&1; then
+    IP=$(ip route get 8.8.8.8 2>/dev/null | grep -oP 'src \K\S+' || echo "YOUR_IP")
+    echo "   echo 'NEXTAUTH_URL=http://${IP}:3000' >> .env.local"
+else
+    echo "   echo 'NEXTAUTH_URL=http://YOUR_SERVER_IP:3000' >> .env.local"
+fi
 echo ""
 echo "2. Check firewall allows port 3000:"
 echo "   On macOS: System Preferences > Security & Privacy > Firewall"
