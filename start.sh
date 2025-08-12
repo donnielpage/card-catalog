@@ -45,7 +45,7 @@ if [ -f ".env.production" ]; then
     echo "🔧 Using NEXTAUTH_URL from .env.production: $NEXTAUTH_URL"
 else
     # Detect network IP for NEXTAUTH_URL as fallback
-    NETWORK_IP=$(ipconfig getifaddr en0 2>/dev/null || hostname -I | awk '{print $1}' || echo "localhost")
+    NETWORK_IP=$(ifconfig | grep "inet " | grep -v 127.0.0.1 | head -1 | awk '{print $2}' || echo "localhost")
     export NEXTAUTH_URL="http://${NETWORK_IP}:3000"
     echo "🔧 Auto-detected NEXTAUTH_URL: $NEXTAUTH_URL"
     echo "💡 Run './configure-env.sh' to create permanent production configuration"
@@ -67,7 +67,8 @@ echo "   ⚙️  Full CRUD management for all data tables"
 echo "   🧮 Summary statistics including cards by manufacturer & year"
 echo "   🔍 Advanced filtering on Cards page (manufacturer+year, player, team, search)"
 echo ""
-# Prepare environment variables
+
+# Prepare environment variables for startup
 if [ -f ".env.production" ]; then
     ENV_FILE=".env.production"
     echo "🔧 Using production environment configuration"
