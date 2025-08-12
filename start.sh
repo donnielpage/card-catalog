@@ -68,7 +68,12 @@ echo "   🧮 Summary statistics including cards by manufacturer & year"
 echo "   🔍 Advanced filtering on Cards page (manufacturer+year, player, team, search)"
 echo ""
 # Start the application in background with nohup and environment variables
-nohup env $(cat .env.production | xargs) npm start > server.log 2>&1 &
+if [ -f ".env.production" ]; then
+    nohup env $(cat .env.production | xargs) npm start > server.log 2>&1 &
+else
+    echo "⚠️  No .env.production found, using .env.local fallback"
+    nohup env $(cat .env.local | xargs) npm start > server.log 2>&1 &
+fi
 
 # Get the process ID
 PID=$!
