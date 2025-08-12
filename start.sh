@@ -83,7 +83,7 @@ else
 fi
 
 # Start the application in background with nohup and environment variables
-nohup env $(cat "$ENV_FILE" | xargs) npm start > server.log 2>&1 &
+nohup env $(grep -v '^#' "$ENV_FILE" | grep -v '^$' | xargs) npm start > server.log 2>&1 &
 
 # Get the process ID
 PID=$!
