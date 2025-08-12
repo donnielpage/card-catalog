@@ -67,13 +67,22 @@ echo "   ⚙️  Full CRUD management for all data tables"
 echo "   🧮 Summary statistics including cards by manufacturer & year"
 echo "   🔍 Advanced filtering on Cards page (manufacturer+year, player, team, search)"
 echo ""
-# Start the application in background with nohup and environment variables
+# Prepare environment variables
 if [ -f ".env.production" ]; then
-    nohup env $(cat .env.production | xargs) npm start > server.log 2>&1 &
+    ENV_FILE=".env.production"
+    echo "🔧 Using production environment configuration"
 else
+    ENV_FILE=".env.local"
     echo "⚠️  No .env.production found, using .env.local fallback"
-    nohup env $(cat .env.local | xargs) npm start > server.log 2>&1 &
+    # Ensure NEXTAUTH_URL is set for .env.local
+    if ! grep -q "^NEXTAUTH_URL=" "$ENV_FILE"; then
+        echo "🔧 Adding NEXTAUTH_URL to environment: $NEXTAUTH_URL"
+        echo "NEXTAUTH_URL=$NEXTAUTH_URL" >> "$ENV_FILE"
+    fi
 fi
+
+# Start the application in background with nohup and environment variables
+nohup env $(cat "$ENV_FILE" | xargs) npm start > server.log 2>&1 &
 
 # Get the process ID
 PID=$!
