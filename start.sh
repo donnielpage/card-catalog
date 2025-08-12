@@ -67,8 +67,8 @@ echo "   ⚙️  Full CRUD management for all data tables"
 echo "   🧮 Summary statistics including cards by manufacturer & year"
 echo "   🔍 Advanced filtering on Cards page (manufacturer+year, player, team, search)"
 echo ""
-# Start the application in background with nohup
-nohup npm start > server.log 2>&1 &
+# Start the application in background with nohup and environment variables
+nohup env $(cat .env.production | xargs) npm start > server.log 2>&1 &
 
 # Get the process ID
 PID=$!
