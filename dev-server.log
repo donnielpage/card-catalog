@@ -1,5 +1,5 @@
 
-> cardvault@1.1.0 dev
+> cardvault@2.0.0-rc dev
 > next dev -H 0.0.0.0
 
    ▲ Next.js 15.4.3
@@ -8,508 +8,509 @@
    - Environments: .env.local
 
  ✓ Starting...
- ✓ Ready in 918ms
+ ✓ Ready in 1032ms
+ ✓ Compiled /middleware in 173ms (108 modules)
  ○ Compiling / ...
- ✓ Compiled / in 620ms (702 modules)
- HEAD / 200 in 789ms
- GET / 200 in 39ms
- ✓ Compiled /api/auth/[...nextauth] in 394ms (958 modules)
- GET /api/app-info 200 in 459ms
+ ✓ Compiled / in 1760ms (734 modules)
+ GET / 200 in 1940ms
+ ✓ Compiled /system-management in 186ms (723 modules)
+ GET /system-management 200 in 301ms
+ GET / 200 in 59ms
+ ✓ Compiled /api/app-info in 478ms (960 modules)
+ GET /api/app-info 200 in 545ms
 [next-auth][warn][NEXTAUTH_URL] 
 https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 712ms
- ✓ Compiled /api/teams/[id] in 122ms (963 modules)
- GET /api/cards 200 in 148ms
- GET /api/cards 200 in 149ms
- GET /api/teams/83 200 in 340ms
- GET /api/teams/83 200 in 340ms
- ✓ Compiled in 393ms (717 modules)
- GET / 200 in 86ms
- ✓ Compiled in 96ms (717 modules)
- GET / 200 in 53ms
- ✓ Compiled in 72ms (717 modules)
- GET / 200 in 36ms
- ✓ Compiled /api/auth/[...nextauth] in 54ms (647 modules)
+ GET /api/auth/session 200 in 1020ms
+ ✓ Compiled /api/teams/[id] in 139ms (966 modules)
 [next-auth][warn][NEXTAUTH_URL] 
 https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 164ms
- GET / 200 in 139ms
- ✓ Compiled /api/app-info in 143ms (662 modules)
- GET /api/app-info 200 in 228ms
+ GET /api/cards 200 in 208ms
+ GET /api/cards 200 in 208ms
+ GET /api/teams/83 200 in 359ms
+ GET /api/teams/83 200 in 359ms
+ ✓ Compiled /api/system/version in 196ms (976 modules)
 [next-auth][warn][NEXTAUTH_URL] 
 https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 264ms
- ✓ Compiled /api/teams/[id] in 45ms (665 modules)
- ✓ Compiled (667 modules)
- GET /api/cards 200 in 118ms
- GET /api/teams/83 200 in 118ms
- GET /api/teams/83 200 in 117ms
- GET /api/cards 200 in 119ms
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 53ms
- ✓ Compiled /api/system/version in 203ms (970 modules)
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/system/info 200 in 287ms
- GET /api/system/info 200 in 329ms
- GET /api/system/backups 200 in 327ms
- GET /api/system/backups 200 in 326ms
- GET /api/system/version 200 in 761ms
- GET /api/system/version 200 in 806ms
- GET /api/auth/session 200 in 9ms
- GET /api/auth/session 200 in 11ms
- ✓ Compiled in 141ms (717 modules)
- GET / 200 in 85ms
- ✓ Compiled in 141ms (717 modules)
- GET / 200 in 54ms
- ✓ Compiled /api/teams/[id] in 24ms (429 modules)
- ✓ Compiled (431 modules)
- GET /api/teams/83 200 in 106ms
- GET /api/cards 200 in 106ms
- ✓ Compiled in 93ms (741 modules)
- GET / 200 in 51ms
- ✓ Compiled /api/auth/[...nextauth] in 312ms (647 modules)
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 412ms
- GET / 200 in 137ms
- ✓ Compiled /api/auth/[...nextauth] in 119ms (427 modules)
- ✓ Compiled (662 modules)
- GET /api/app-info 200 in 263ms
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 266ms
- GET /api/auth/session 200 in 4ms
- ✓ Compiled /api/teams/[id] in 43ms (665 modules)
- ✓ Compiled (667 modules)
- GET /api/teams/83 200 in 156ms
- GET /api/teams/83 200 in 157ms
- GET /api/cards 200 in 158ms
- GET /api/cards 200 in 159ms
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/csrf 200 in 48ms
- POST /api/auth/signout 200 in 4ms
- GET /api/auth/session 200 in 3ms
- ✓ Compiled /auth/signin in 354ms (1026 modules)
- ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
- GET /auth/signin 200 in 515ms
- GET /auth/signin 200 in 498ms
- GET / 200 in 32ms
+ GET /api/system/changelog?limit=10 200 in 256ms
+ GET /api/system/backups 200 in 259ms
+ GET /api/system/backups 200 in 255ms
+ GET /api/system/changelog?limit=10 200 in 5ms
+ GET /api/system/info 200 in 293ms
+ GET /api/system/info 200 in 294ms
+ GET /api/system/version 200 in 581ms
+ GET /api/system/version 200 in 322ms
+ GET / 200 in 120ms
+ GET /api/auth/session 200 in 10ms
  GET /api/app-info 200 in 12ms
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 38ms
- GET /api/auth/session 200 in 4ms
- GET /auth/signin 200 in 7ms
- GET /api/auth/providers 200 in 7ms
- GET /api/auth/csrf 200 in 3ms
- POST /api/auth/callback/credentials 401 in 211ms
- GET /api/auth/providers 200 in 12ms
- GET /api/auth/csrf 200 in 4ms
- POST /api/auth/callback/credentials 401 in 5ms
- GET /api/auth/providers 200 in 11ms
- GET /api/auth/csrf 200 in 5ms
- POST /api/auth/callback/credentials 200 in 226ms
- GET /api/auth/session 200 in 4ms
- GET /api/auth/session 200 in 3ms
- GET /api/auth/session 200 in 3ms
- GET / 200 in 8ms
- GET / 200 in 7ms
- GET /api/cards 200 in 10ms
+ GET /api/cards 200 in 12ms
+ GET /api/teams/83 200 in 12ms
  GET /api/teams/83 200 in 12ms
  GET /api/cards 200 in 13ms
- GET /api/teams/83 200 in 13ms
- ✓ Compiled /api/system/backups in 149ms (725 modules)
- ✓ Compiled (729 modules)
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/system/backups 200 in 285ms
- GET /api/system/backups 200 in 283ms
- GET /api/system/info 200 in 327ms
- GET /api/system/info 200 in 358ms
- GET /api/system/version 200 in 777ms
- GET /api/system/version 200 in 905ms
- ✓ Compiled /api/teams in 257ms (1037 modules)
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/teams 200 in 303ms
- GET /api/teams 200 in 305ms
- GET /api/users 200 in 304ms
- GET /api/users 200 in 305ms
- ✓ Compiled /api/users/[id] in 129ms (1037 modules)
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- PUT /api/users/2 200 in 689ms
- GET /api/users 200 in 5ms
- GET /api/auth/csrf 200 in 32ms
- POST /api/auth/signout 200 in 4ms
- GET /api/auth/session 200 in 5ms
- GET /auth/signin 200 in 119ms
- ✓ Compiled /api/app-info in 74ms (735 modules)
- GET /api/app-info 200 in 158ms
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 179ms
- GET /api/auth/session 200 in 3ms
- GET /api/auth/providers 200 in 14ms
- GET /api/auth/csrf 200 in 4ms
- POST /api/auth/callback/credentials 200 in 223ms
- GET /api/auth/session 200 in 4ms
- GET /api/auth/session 200 in 3ms
- GET /api/auth/session 200 in 35ms
- GET / 200 in 36ms
- GET / 200 in 8ms
- GET /api/cards 200 in 9ms
- GET /api/cards 200 in 9ms
- GET /api/cards 200 in 13ms
- GET /api/cards 200 in 16ms
- ✓ Compiled /api/manufacturers in 275ms (1043 modules)
- GET /api/teams 200 in 300ms
- GET /api/manufacturers 200 in 310ms
- GET /api/players 200 in 314ms
- GET /api/manufacturers 200 in 310ms
- GET /api/players 200 in 311ms
- GET /api/teams 200 in 312ms
- GET /api/teams 200 in 12ms
- GET /api/players 200 in 21ms
- GET /api/teams 200 in 22ms
- GET /api/players 200 in 23ms
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 45ms
- GET /api/auth/session 200 in 4ms
- GET /api/auth/providers 200 in 13ms
- GET /api/auth/csrf 200 in 7ms
- POST /api/auth/callback/credentials 200 in 222ms
- GET /api/auth/session 200 in 3ms
- GET /api/auth/session 200 in 4ms
- GET /api/auth/session 200 in 31ms
- GET / 200 in 32ms
- GET / 200 in 6ms
- GET /api/teams/83 200 in 8ms
- GET /api/teams/83 200 in 4ms
- GET /api/cards 200 in 9ms
- GET /api/cards 200 in 9ms
- GET /api/teams/83 200 in 12ms
- GET / 200 in 92ms
- GET /api/app-info 200 in 7ms
- GET /api/auth/session 200 in 9ms
- GET /api/auth/session 200 in 3ms
- GET /api/cards 200 in 5ms
- GET /api/teams/83 200 in 9ms
- GET /api/teams/83 200 in 8ms
- GET /api/cards 200 in 9ms
- GET /api/auth/session 200 in 13ms
- GET /api/auth/session 200 in 6ms
- GET / 200 in 39ms
- GET /api/app-info 200 in 6ms
- GET /api/auth/session 200 in 8ms
- GET /api/auth/session 200 in 3ms
- GET /api/cards 200 in 4ms
- GET /api/teams/83 200 in 7ms
- GET /api/teams/83 200 in 8ms
- GET /api/cards 200 in 8ms
- GET /api/auth/session 200 in 7ms
- GET /api/auth/session 200 in 4ms
- GET /api/auth/session 200 in 4ms
- GET /api/auth/session 200 in 3ms
+ GET /api/system/backups 200 in 12ms
+ GET /api/system/changelog?limit=10 200 in 25ms
+ GET /api/system/backups 200 in 27ms
+ GET /api/system/changelog?limit=10 200 in 7ms
+ GET /api/system/info 200 in 75ms
+ GET /api/system/info 200 in 75ms
+ GET /api/system/version 200 in 151ms
+ GET /api/system/version 200 in 261ms
  GET /api/auth/session 200 in 10ms
- GET /api/auth/session 200 in 11ms
- GET /api/auth/session 200 in 9ms
- GET / 200 in 36ms
- ⚠ Cross origin request detected from 192.168.7.213 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
-Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
- GET /api/auth/session 200 in 4ms
- GET /api/app-info 200 in 8ms
- GET /auth/signin 200 in 12ms
- GET / 200 in 30ms
- GET /api/app-info 200 in 3ms
- GET /api/auth/session 200 in 6ms
- GET /api/auth/session 200 in 5ms
- GET /api/cards 200 in 8ms
- GET /api/cards 200 in 8ms
- GET /api/auth/session 200 in 8ms
- GET /api/teams/83 200 in 9ms
- GET /api/teams/83 200 in 9ms
- GET / 200 in 36ms
- GET /api/app-info 200 in 3ms
- GET /api/auth/session 200 in 7ms
- GET /api/auth/session 200 in 3ms
- GET /api/cards 200 in 7ms
- GET /api/auth/session 200 in 9ms
- GET /api/teams/83 200 in 8ms
- GET /api/teams/83 200 in 9ms
- GET /api/cards 200 in 10ms
- GET /api/auth/session 200 in 10ms
- GET /api/auth/session 200 in 8ms
- GET / 200 in 38ms
- GET /api/app-info 200 in 5ms
- GET /api/auth/session 200 in 8ms
- GET /api/auth/session 200 in 3ms
- GET /api/cards 200 in 9ms
- GET /api/cards 200 in 8ms
- GET /api/teams/83 200 in 9ms
- GET /api/teams/83 200 in 9ms
- GET /api/auth/session 200 in 4ms
- GET /api/auth/session 200 in 4ms
- GET /api/auth/session 200 in 10ms
- GET /api/auth/session 200 in 7ms
- ✓ Compiled in 224ms (1040 modules)
- GET / 200 in 95ms
- GET / 200 in 92ms
- ✓ Compiled in 157ms (1040 modules)
- GET / 200 in 45ms
- GET / 200 in 45ms
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 77ms
- GET / 200 in 107ms
- GET /api/app-info 200 in 13ms
- GET /api/auth/session 200 in 16ms
- GET /api/auth/session 200 in 5ms
- GET /api/teams/83 200 in 16ms
- GET /api/teams/83 200 in 16ms
- GET /api/cards 200 in 17ms
- GET /api/cards 200 in 18ms
- GET / 200 in 40ms
- GET /api/app-info 200 in 4ms
- GET /api/auth/session 200 in 6ms
- GET /api/auth/session 200 in 4ms
- GET /api/cards 200 in 5ms
- GET /api/cards 200 in 10ms
- GET /api/teams/83 200 in 11ms
- GET /api/teams/83 200 in 10ms
- ✓ Compiled in 80ms (318 modules)
- GET / 200 in 30ms
- GET / 200 in 30ms
- ✓ Compiled in 54ms (318 modules)
- GET / 200 in 12ms
- GET / 200 in 12ms
- ✓ Compiled in 46ms (318 modules)
- GET / 200 in 8ms
- GET / 200 in 8ms
- ✓ Compiled in 46ms (318 modules)
- GET / 200 in 10ms
- GET / 200 in 15ms
- ✓ Compiled /api/teams in 94ms (714 modules)
- ✓ Compiled in 0ms (717 modules)
- ✓ Compiled in 0ms (717 modules)
- ✓ Compiled in 0ms (717 modules)
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/users 200 in 302ms
- GET /api/users 200 in 304ms
- GET / 200 in 315ms
- GET / 200 in 315ms
- GET /api/teams 200 in 429ms
- GET /api/teams 200 in 429ms
- ✓ Compiled /api/auth/[...nextauth] in 168ms (719 modules)
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 214ms
- GET /api/auth/session 200 in 3ms
- GET /api/auth/session 200 in 13ms
- GET /api/auth/session 200 in 8ms
- GET /api/auth/session 200 in 12ms
- GET /api/auth/session 200 in 8ms
- GET /api/auth/session 200 in 11ms
- GET /api/auth/session 200 in 7ms
- GET /api/auth/session 200 in 15ms
- GET /api/auth/session 200 in 6ms
- GET /api/auth/session 200 in 11ms
- GET /api/auth/session 200 in 8ms
- ✓ Compiled in 163ms (780 modules)
- GET / 200 in 104ms
- ✓ Compiled in 227ms (780 modules)
- GET / 200 in 61ms
- ✓ Compiled /api/cards in 104ms (484 modules)
- ✓ Compiled (486 modules)
- GET /api/teams/83 200 in 248ms
- GET /api/cards 200 in 248ms
- ✓ Compiled /api/auth/[...nextauth] in 364ms (702 modules)
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 480ms
- ✓ Compiled in 85ms (318 modules)
- GET / 200 in 62ms
- ✓ Compiled in 53ms (318 modules)
- GET / 200 in 7ms
- ✓ Compiled in 47ms (318 modules)
- GET / 200 in 7ms
- ✓ Compiled in 45ms (318 modules)
- GET / 200 in 5ms
- ✓ Compiled in 164ms (780 modules)
- GET / 200 in 103ms
- ✓ Compiled in 47ms (318 modules)
- GET / 200 in 8ms
- ✓ Compiled in 147ms (780 modules)
- GET / 200 in 60ms
- ✓ Compiled /api/cards in 36ms (484 modules)
- ✓ Compiled (486 modules)
- GET /api/teams/83 200 in 193ms
- GET /api/cards 200 in 194ms
- ✓ Compiled in 109ms (804 modules)
- GET / 200 in 64ms
- ✓ Compiled /api/auth/[...nextauth] in 269ms (719 modules)
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 384ms
- GET / 200 in 145ms
- ✓ Compiled /api/app-info in 113ms (722 modules)
- GET /api/app-info 200 in 198ms
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 237ms
- GET /api/cards 200 in 14ms
- GET /api/teams/83 200 in 15ms
- GET /api/teams/83 200 in 15ms
- GET /api/cards 200 in 15ms
- ✓ Compiled /api/system/version in 117ms (725 modules)
- ✓ Compiled (729 modules)
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/system/backups 200 in 246ms
- GET /api/system/backups 200 in 247ms
- GET /api/system/info 200 in 295ms
- GET /api/system/info 200 in 334ms
- GET / 200 in 42ms
- GET / 200 in 7ms
- GET /api/system/version 200 in 658ms
- GET /api/system/version 200 in 694ms
- GET / 200 in 177ms
- ✓ Compiled /favicon.ico in 371ms (788 modules)
- GET /favicon.ico 200 in 369ms
- GET /favicon.ico 200 in 576ms
- GET /apple-touch-icon-precomposed.png 404 in 586ms
- GET /apple-touch-icon.png 404 in 565ms
- ✓ Compiled /api/auth/[...nextauth] in 203ms (702 modules)
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 346ms
- GET /api/auth/session 200 in 14ms
- GET / 200 in 139ms
- ✓ Compiled /api/app-info in 91ms (717 modules)
- GET /api/app-info 200 in 231ms
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 270ms
- ✓ Compiled /api/teams/[id] in 106ms (720 modules)
- ✓ Compiled (722 modules)
- GET /api/teams/83 200 in 192ms
- GET /api/cards 200 in 193ms
- GET /api/cards 200 in 194ms
- GET /api/teams/83 200 in 193ms
- ✓ Compiled /api/teams in 133ms (724 modules)
- ✓ Compiled (726 modules)
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/teams 200 in 243ms
- GET /api/teams 200 in 244ms
- GET /api/users 200 in 245ms
- GET /api/users 200 in 246ms
- GET /api/auth/session 200 in 20ms
- GET /api/auth/session 200 in 16ms
- ✓ Compiled /api/system/version in 136ms (717 modules)
- ✓ Compiled (722 modules)
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/system/backups 200 in 248ms
- GET /api/system/backups 200 in 252ms
- GET /api/system/info 200 in 314ms
- GET /api/system/info 200 in 350ms
- GET /api/system/version 200 in 564ms
- GET /api/system/version 200 in 645ms
- ✓ Compiled /api/players in 73ms (725 modules)
- ✓ Compiled (727 modules)
- GET /api/players 200 in 163ms
- GET /api/players 200 in 163ms
- GET /api/teams 200 in 165ms
- GET /api/teams 200 in 163ms
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 49ms
- GET /api/auth/session 200 in 13ms
- GET /api/auth/session 200 in 11ms
- ✓ Compiled in 270ms (1020 modules)
- GET / 200 in 98ms
- ✓ Compiled in 46ms (318 modules)
- GET / 200 in 8ms
- ✓ Compiled in 42ms (318 modules)
- GET / 200 in 7ms
- ✓ Compiled in 47ms (318 modules)
- GET / 200 in 14ms
- ✓ Compiled in 47ms (318 modules)
- GET / 200 in 8ms
- ✓ Compiled in 42ms (318 modules)
- GET / 200 in 8ms
- ✓ Compiled in 45ms (318 modules)
- GET / 200 in 9ms
- ✓ Compiled in 41ms (318 modules)
- GET / 200 in 7ms
- ✓ Compiled in 52ms (318 modules)
- GET / 200 in 9ms
- ✓ Compiled in 52ms (318 modules)
- ✓ Compiled /middleware in 221ms (426 modules)
- GET / 200 in 6ms
- GET / 200 in 6ms
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/auth/session 200 in 87ms
- GET / 200 in 126ms
- GET /api/auth/session 200 in 7ms
- ✓ Compiled /api/teams/[id] in 142ms (717 modules)
- ✓ Compiled (722 modules)
- GET /api/app-info 200 in 379ms
-[next-auth][warn][NEXTAUTH_URL] 
-https://next-auth.js.org/warnings#nextauth_url
- GET /api/teams/83 200 in 276ms
- GET /api/teams/83 200 in 276ms
- GET /api/cards 200 in 282ms
- GET /api/cards 200 in 281ms
- GET / 200 in 42ms
- ✓ Compiled in 65ms (318 modules)
+ GET /api/system/changelog?limit=10 200 in 12ms
+ GET /api/system/backups 200 in 12ms
+ GET /api/system/info 200 in 46ms
+ GET /api/system/version 200 in 402ms
+ GET /api/system/backups 200 in 21ms
+ GET /api/system/backups 200 in 22ms
+ GET /api/system/changelog?limit=10 200 in 26ms
+ GET /api/system/changelog?limit=10 200 in 6ms
+ GET /api/system/info 200 in 58ms
+ GET /api/system/info 200 in 64ms
+ GET /api/system/version 200 in 152ms
+ GET /api/system/version 200 in 263ms
+ ✓ Compiled in 158ms (312 modules)
  GET / 200 in 13ms
- ✓ Compiled in 98ms (1040 modules)
- GET / 200 in 55ms
- ✓ Compiled /api/system/backups in 109ms (725 modules)
- ✓ Compiled (729 modules)
+ ✓ Compiled in 166ms (980 modules)
+ GET / 200 in 66ms
+ ✓ Compiled /auth/signin in 145ms (712 modules)
+ GET /auth/signin 200 in 298ms
+ ✓ Compiled in 99ms (726 modules)
+ GET / 200 in 54ms
+ ✓ Compiled in 61ms (314 modules)
+ ✓ Compiled in 50ms (314 modules)
+ GET / 200 in 25ms
+ GET / 200 in 8ms
+ ✓ Compiled in 37ms (314 modules)
+ GET / 200 in 10ms
+ ✓ Compiled in 44ms (314 modules)
+ GET / 200 in 8ms
+ GET / 200 in 112ms
+ ✓ Compiled /api/app-info in 54ms (652 modules)
+ ✓ Compiled in 0ms (667 modules)
+ ✓ Compiled in 0ms (667 modules)
+ ✓ Compiled in 0ms (667 modules)
 [next-auth][warn][NEXTAUTH_URL] 
 https://next-auth.js.org/warnings#nextauth_url
- GET /api/system/backups 200 in 233ms
- GET /api/system/backups 200 in 233ms
+ GET /api/auth/session 200 in 305ms
+ ✓ Compiled /api/teams/[id] in 0ms (667 modules)
+ GET /api/app-info 200 in 398ms
+ GET / 200 in 341ms
+ ✓ Compiled (673 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/teams/83 200 in 199ms
+ GET /api/teams/83 200 in 199ms
+ GET /api/cards 200 in 207ms
+ GET /api/cards 200 in 207ms
+ GET / 200 in 33ms
+ ✓ Compiled /api/system/changelog in 70ms (671 modules)
+ ✓ Compiled (678 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/system/backups 200 in 196ms
+ GET /api/system/backups 200 in 196ms
+ GET /api/system/changelog?limit=10 200 in 202ms
+ GET /api/system/changelog?limit=10 200 in 6ms
+ GET /api/system/info 200 in 241ms
+ GET / 200 in 34ms
+ GET /api/system/info 200 in 241ms
+ GET / 200 in 5ms
+ GET /api/system/version 200 in 356ms
+ GET /api/system/version 200 in 594ms
+ GET / 200 in 109ms
+ GET /api/auth/session 200 in 11ms
+ GET /api/app-info 200 in 14ms
+ GET /api/teams/83 200 in 14ms
+ GET /api/teams/83 200 in 14ms
+ GET /api/cards 200 in 15ms
+ GET /api/cards 200 in 14ms
+ GET /api/system/backups 200 in 26ms
+ GET /api/system/backups 200 in 26ms
+ GET /api/system/changelog?limit=10 200 in 27ms
+ GET /api/system/changelog?limit=10 200 in 5ms
+ GET /api/system/info 200 in 59ms
+ GET /api/system/info 200 in 60ms
+ GET /api/system/version 200 in 435ms
+ GET /api/system/version 200 in 409ms
+ GET /api/auth/session 200 in 7ms
+ GET /api/system/backups 200 in 12ms
+ GET /api/system/changelog?limit=10 200 in 14ms
+ GET /api/system/info 200 in 45ms
+ GET /api/system/version 200 in 430ms
+ GET / 200 in 38ms
+ GET /api/auth/session 200 in 7ms
+ GET /api/app-info 200 in 6ms
+ GET /api/cards 200 in 5ms
+ GET /api/teams/83 200 in 9ms
+ GET /api/teams/83 200 in 9ms
+ GET /api/cards 200 in 10ms
+ GET /api/cards 200 in 12ms
+ GET /api/cards 200 in 13ms
+ ✓ Compiled /api/teams in 298ms (984 modules)
+ GET /api/players 200 in 341ms
+ GET /api/players 200 in 341ms
+ GET /api/manufacturers 200 in 341ms
+ GET /api/manufacturers 200 in 339ms
+ GET /api/teams 200 in 339ms
+ GET /api/teams 200 in 342ms
+ ✓ Compiled /api/users in 240ms (986 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/teams 200 in 322ms
+ GET /api/teams 200 in 322ms
+ GET /api/users 200 in 321ms
+ GET /api/users 200 in 323ms
+ GET /api/auth/csrf 200 in 20ms
+ POST /api/auth/signout 200 in 5ms
+ GET / 200 in 125ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/app-info 200 in 7ms
+ ✓ Compiled /auth/signin in 161ms (691 modules)
+ GET /auth/signin 200 in 202ms
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/providers 200 in 61ms
+ GET /api/auth/csrf 200 in 4ms
+ POST /api/auth/callback/credentials 200 in 225ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/auth/session 200 in 4ms
+ GET / 200 in 14ms
+ GET / 200 in 6ms
+ GET /api/teams/83 200 in 19ms
+ GET /api/cards 200 in 21ms
+ GET /api/cards 200 in 20ms
+ GET /api/teams/83 200 in 19ms
+ GET /api/system/backups 200 in 39ms
+ GET /api/system/changelog?limit=10 200 in 38ms
+ GET /api/system/backups 200 in 37ms
+ GET /api/system/changelog?limit=10 200 in 6ms
+ GET /api/system/info 200 in 64ms
+ GET /api/system/info 200 in 79ms
+ GET /api/system/version 200 in 372ms
+ GET /api/system/version 200 in 370ms
+ GET /api/auth/session 200 in 12ms
+ GET /api/system/backups 200 in 12ms
+ GET /api/system/changelog?limit=10 200 in 13ms
+ GET /api/system/info 200 in 47ms
+ GET /api/system/version 200 in 243ms
+ GET /api/auth/session 200 in 6ms
+ GET /api/system/backups 200 in 11ms
+ GET /api/system/changelog?limit=10 200 in 15ms
+ GET /api/system/info 200 in 49ms
+ GET /api/system/version 200 in 399ms
+ ✓ Compiled in 197ms (726 modules)
+ GET / 200 in 85ms
+ ✓ Compiled /api/auth/[...nextauth] in 145ms (652 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/session 200 in 248ms
+ GET / 200 in 43ms
+ ✓ Compiled /api/system/version in 50ms (668 modules)
+ ✓ Compiled in 0ms (675 modules)
+ ✓ Compiled in 0ms (675 modules)
+ ✓ Compiled in 0ms (675 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/system/info 200 in 381ms
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/system/changelog?limit=10 200 in 469ms
+ GET /api/system/backups 200 in 470ms
+ GET / 200 in 412ms
+ GET / 200 in 6ms
+ GET /api/system/version 200 in 929ms
+ ✓ Compiled /api/users in 140ms (678 modules)
+ ✓ Compiled (680 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/teams 200 in 277ms
+ GET /api/teams 200 in 276ms
+ GET /api/users 200 in 278ms
+ GET /api/users 200 in 278ms
+ GET / 200 in 39ms
+ GET /api/auth/csrf 200 in 22ms
+ POST /api/auth/signout 200 in 4ms
+ GET / 200 in 85ms
+ GET /api/auth/session 200 in 6ms
+ ✓ Compiled /api/app-info in 66ms (682 modules)
+ GET /api/app-info 200 in 148ms
+ GET /auth/signin 200 in 154ms
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/auth/providers 200 in 46ms
+ GET /api/auth/csrf 200 in 3ms
+[AUTH] Attempting login for username: testadmin
+[AUTH] User found: testadmin Role: admin
+[AUTH] Authentication successful for: testadmin
+ POST /api/auth/callback/credentials 200 in 212ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/session 200 in 3ms
+ GET / 200 in 13ms
+ GET / 200 in 6ms
+ ✓ Compiled /api/cards in 120ms (685 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/cards 200 in 168ms
+ GET /api/cards 200 in 168ms
  GET / 200 in 31ms
- GET /api/system/info 200 in 273ms
- GET /api/system/info 200 in 273ms
- GET /api/system/version 200 in 578ms
- GET /api/system/version 200 in 580ms
- ✓ Compiled /api/teams in 81ms (731 modules)
- ✓ Compiled (733 modules)
+ ✓ Compiled in 69ms (314 modules)
+ GET / 200 in 19ms
+ ✓ Compiled in 162ms (726 modules)
+ GET / 200 in 90ms
+ ✓ Compiled in 69ms (314 modules)
+ ✓ Compiled in 52ms (314 modules)
+ ✓ Compiled in 73ms (314 modules)
+ ✓ Compiled in 70ms (314 modules)
+ ✓ Compiled in 45ms (314 modules)
+ ✓ Compiled in 39ms (314 modules)
+ ✓ Compiled in 75ms (314 modules)
+ ✓ Compiled in 75ms (314 modules)
+ ✓ Compiled in 78ms (314 modules)
+ ✓ Compiled in 40ms (314 modules)
+ ✓ Compiled in 46ms (314 modules)
+ ✓ Compiled in 68ms (314 modules)
+ ✓ Compiled in 41ms (314 modules)
+ ✓ Compiled in 67ms (314 modules)
+ GET / 200 in 25ms
+ GET / 200 in 7ms
+ GET / 200 in 6ms
+ GET / 200 in 6ms
+ GET / 200 in 6ms
+ GET / 200 in 6ms
+ GET / 200 in 6ms
+ GET / 200 in 7ms
+ GET / 200 in 7ms
+ GET / 200 in 7ms
+ GET / 200 in 7ms
+ GET / 200 in 6ms
+ GET / 200 in 6ms
+ GET / 200 in 5ms
+ ✓ Compiled in 70ms (314 modules)
+ ✓ Compiled in 45ms (314 modules)
+ ✓ Compiled in 39ms (314 modules)
+ GET / 200 in 22ms
+ GET / 200 in 8ms
+ GET / 200 in 5ms
+ ✓ Compiled /api/auth/[...nextauth] in 249ms (652 modules)
 [next-auth][warn][NEXTAUTH_URL] 
 https://next-auth.js.org/warnings#nextauth_url
- GET /api/teams 200 in 179ms
- GET /api/teams 200 in 180ms
- GET /api/users 200 in 179ms
- GET /api/users 200 in 181ms
- ✓ Compiled in 46ms (318 modules)
- GET / 200 in 16ms
- ✓ Compiled in 121ms (1052 modules)
+ GET /api/auth/session 200 in 371ms
+ GET / 200 in 47ms
+ GET / 200 in 101ms
+ GET /api/auth/session 200 in 5ms
+ ✓ Compiled /api/cards in 56ms (667 modules)
+ ✓ Compiled (671 modules)
+ GET /api/app-info 200 in 219ms
 [next-auth][warn][NEXTAUTH_URL] 
 https://next-auth.js.org/warnings#nextauth_url
- GET /api/system/backups 200 in 43ms
- GET /api/system/backups 200 in 44ms
- GET /api/system/info 200 in 69ms
- GET /api/system/info 200 in 81ms
- GET /api/system/version 200 in 226ms
- GET /api/system/version 200 in 358ms
- ✓ Compiled in 47ms (318 modules)
- GET /api/auth/session 200 in 18ms
- GET /api/system/backups 200 in 14ms
- GET /api/system/info 200 in 50ms
- GET /api/system/version 200 in 379ms
- ✓ Compiled in 43ms (318 modules)
- ✓ Compiled in 43ms (318 modules)
- ✓ Compiled in 116ms (1045 modules)
- ✓ Compiled in 101ms (1045 modules)
- ✓ Compiled in 93ms (1040 modules)
+ GET /api/cards 200 in 244ms
+ GET /api/cards 200 in 244ms
+ GET / 200 in 42ms
+ GET /api/auth/csrf 200 in 20ms
+ POST /api/auth/signout 200 in 5ms
+ GET / 200 in 84ms
+ GET /api/auth/session 200 in 5ms
+ GET /api/app-info 200 in 6ms
+ GET /auth/signin 200 in 12ms
+ GET /api/auth/providers 200 in 8ms
+ GET /api/auth/csrf 200 in 6ms
+ POST /api/auth/callback/credentials 200 in 248ms
+ GET /api/auth/session 200 in 4ms
+ GET /api/auth/session 200 in 3ms
+ GET / 200 in 5ms
+ GET / 200 in 6ms
+ ✓ Compiled /api/teams/[id] in 84ms (673 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/cards 200 in 191ms
+ GET /api/cards 200 in 191ms
+ GET /api/teams/83 200 in 198ms
+ GET /api/teams/83 200 in 198ms
+ GET /api/cards 200 in 11ms
+ GET /api/cards 200 in 12ms
+ ✓ Compiled /api/teams in 98ms (675 modules)
+ ✓ Compiled (679 modules)
+ GET /api/manufacturers 200 in 181ms
+ GET /api/manufacturers 200 in 182ms
+ GET /api/players 200 in 186ms
+ GET /api/players 200 in 182ms
+ GET /api/teams 200 in 183ms
+ GET /api/teams 200 in 186ms
+ GET /api/teams 200 in 18ms
+ ✓ Compiled /api/users in 102ms (681 modules)
+ ✓ Compiled in 0ms (681 modules)
+ GET /api/teams 200 in 182ms
+ ✓ Compiled in 0ms (681 modules)
+ ✓ Compiled in 0ms (681 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/users 200 in 333ms
+ GET /api/users 200 in 334ms
+ GET / 200 in 310ms
+ ✓ Compiled /api/system/changelog in 96ms (684 modules)
+ ✓ Compiled (691 modules)
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+ GET /api/system/backups 200 in 236ms
+ GET /api/system/backups 200 in 231ms
+ GET /api/system/changelog?limit=10 200 in 236ms
+ GET /api/system/changelog?limit=10 200 in 5ms
+ GET / 200 in 34ms
+ GET / 200 in 5ms
+ GET /api/system/info 200 in 314ms
+ GET /api/system/info 200 in 316ms
+ GET /api/system/version 200 in 538ms
+ GET /api/system/version 200 in 329ms
+ GET /api/players 200 in 13ms
+ GET /api/players 200 in 20ms
+ GET /api/teams 200 in 21ms
+ GET /api/teams 200 in 21ms
+ GET /api/users 200 in 19ms
+ GET /api/teams 200 in 19ms
+ GET /api/teams 200 in 20ms
+ GET /api/users 200 in 20ms
+ GET /api/system/changelog?limit=10 200 in 25ms
+ GET /api/system/backups 200 in 26ms
+ GET /api/system/backups 200 in 26ms
+ GET /api/system/changelog?limit=10 200 in 5ms
+ GET /api/system/info 200 in 60ms
+ GET /api/system/info 200 in 63ms
+ GET /api/system/version 200 in 100ms
+ GET /api/system/version 200 in 76ms
+   Reload env: .env.local
+ ✓ Compiled in 181ms (1099 modules)
+ GET / 200 in 56ms
+ ✓ Compiled in 89ms (314 modules)
+ GET / 200 in 6ms
+   Reload env: .env.local
+ ✓ Compiled in 85ms (820 modules)
+ ⨯ Error: Cannot find module './73.js'
+Require stack:
+- /Users/donniepage/development/carddb/card-catalog/.next/server/webpack-runtime.js
+- /Users/donniepage/development/carddb/card-catalog/.next/server/app/page.js
+- /Users/donniepage/development/carddb/card-catalog/node_modules/next/dist/server/require.js
+- /Users/donniepage/development/carddb/card-catalog/node_modules/next/dist/server/load-components.js
+- /Users/donniepage/development/carddb/card-catalog/node_modules/next/dist/build/utils.js
+- /Users/donniepage/development/carddb/card-catalog/node_modules/next/dist/build/swc/options.js
+- /Users/donniepage/development/carddb/card-catalog/node_modules/next/dist/build/swc/index.js
+- /Users/donniepage/development/carddb/card-catalog/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/donniepage/development/carddb/card-catalog/node_modules/next/dist/server/config.js
+- /Users/donniepage/development/carddb/card-catalog/node_modules/next/dist/server/next.js
+- /Users/donniepage/development/carddb/card-catalog/node_modules/next/dist/server/lib/start-server.js
+    at <unknown> (.next/server/app/page.js:2:7584)
+    at Object.<anonymous> (.next/server/app/page.js:2:7637) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 544ms (1040 modules)
+ GET / 500 in 936ms
+ GET / 200 in 70ms
+ GET / 200 in 5ms
+ GET / 200 in 110ms
+ ✓ Compiled /_not-found in 169ms (1045 modules)
+ GET /_next/static/chunks/app-pages-internals.js 404 in 311ms
+ GET /_next/static/chunks/app/page.js 404 in 309ms
+ GET /_next/static/chunks/app/auth/signin/page.js 404 in 308ms
+ GET /_next/static/chunks/main-app.js?v=1754929709953 404 in 56ms
+ GET /_next/static/css/app/layout.css?v=1754929709953 404 in 57ms
+[Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/client-development/7.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/client-development/7.pack.gz'
+}
+ ⨯ unhandledRejection: [Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/client-development/7.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/client-development/7.pack.gz'
+}
+ ⨯ unhandledRejection:  [Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/client-development/7.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/client-development/7.pack.gz'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/client-development/7.pack.gz'
+[Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/1.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/1.pack.gz'
+}
+ ⨯ unhandledRejection: [Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/1.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/1.pack.gz'
+}
+ ⨯ unhandledRejection:  [Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/1.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/1.pack.gz'
+}
+[Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/3.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/3.pack.gz'
+}
+ ⨯ unhandledRejection: [Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/3.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/3.pack.gz'
+}
+ ⨯ unhandledRejection:  [Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/3.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/3.pack.gz'
+}
+[Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/8.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/8.pack.gz'
+}
+ ⨯ unhandledRejection: [Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/8.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/8.pack.gz'
+}
+ ⨯ unhandledRejection:  [Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/8.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/8.pack.gz'
+}
+[Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/9.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/9.pack.gz'
+}
+ ⨯ unhandledRejection: [Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/9.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/9.pack.gz'
+}
+ ⨯ unhandledRejection:  [Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/9.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/9.pack.gz'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, stat '/Users/donniepage/development/carddb/card-catalog/.next/cache/webpack/server-development/1.pack.gz'
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/donniepage/development/carddb/card-catalog/.next/server/app-paths-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/donniepage/development/carddb/card-catalog/.next/server/app-paths-manifest.json'
+}
+ GET / 500 in 770ms
+[?25h

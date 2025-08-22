@@ -13,6 +13,7 @@ export default function TeamForm({ team, onSubmit, onCancel }: TeamFormProps) {
   const [formData, setFormData] = useState<Omit<Team, 'id'>>({
     city: '',
     mascot: '',
+    teamname: '',
     primary_color: '#3b82f6',
     secondary_color: '#ffffff', 
     accent_color: '#06b6d4'
@@ -23,6 +24,7 @@ export default function TeamForm({ team, onSubmit, onCancel }: TeamFormProps) {
       setFormData({
         city: team.city || '',
         mascot: team.mascot || '',
+        teamname: team.teamname || '',
         primary_color: team.primary_color || '#3b82f6',
         secondary_color: team.secondary_color || '#ffffff',
         accent_color: team.accent_color || '#06b6d4'
@@ -74,6 +76,20 @@ export default function TeamForm({ team, onSubmit, onCancel }: TeamFormProps) {
               name="mascot"
               value={formData.mascot || ''}
               onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Team Name *
+            </label>
+            <input
+              type="text"
+              name="teamname"
+              value={formData.teamname || ''}
+              onChange={handleChange}
+              required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>

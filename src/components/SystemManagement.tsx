@@ -2,16 +2,37 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { useAuth } from '@/lib/hooks/useAuth';
 import { ChangelogEntry } from '@/lib/changelog';
 
 interface SystemInfo {
   version: string;
   installDate: string;
   upgradeDate: string | null;
+  environment: string;
   database: {
-    exists: boolean;
-    size: string;
-    modified: string;
+    mode: string;
+    status: string;
+    error: string | null;
+    isMultiTenant: boolean;
+    details: {
+      type: string;
+      host?: string;
+      port?: string;
+      database?: string;
+      tenantCount?: number;
+      totalCards?: number;
+      totalUsers?: number;
+      connectionPool?: string;
+      features?: string[];
+      file?: {
+        exists: boolean;
+        size: string;
+        modified: string;
+        path: string;
+      };
+      error?: string;
+    };
   };
   images: {
     count: number;
@@ -44,6 +65,7 @@ interface VersionInfo {
 
 export default function SystemManagement() {
   const { data: session } = useSession();
+  const { canManageGlobalSystem } = useAuth();
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
   const [backups, setBackups] = useState<BackupLists | null>(null);
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
@@ -53,13 +75,13 @@ export default function SystemManagement() {
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
 
   useEffect(() => {
-    if (session?.user.role === 'admin') {
+    if (canManageGlobalSystem && session) {
       loadSystemInfo();
       loadBackups();
       loadVersionInfo();
       loadChangelog();
     }
-  }, [session]);
+  }, [canManageGlobalSystem, session]);
 
   const loadSystemInfo = async () => {
     try {
@@ -189,14 +211,85 @@ export default function SystemManagement() {
               
               <div>
                 <h3 className="font-medium text-gray-900">Database</h3>
-                {systemInfo.database.exists ? (
-                  <>
-                    <p className="text-sm text-gray-600">Size: {systemInfo.database.size}</p>
-                    <p className="text-sm text-gray-600">Modified: {formatDate(systemInfo.database.modified)}</p>
-                  </>
-                ) : (
-                  <p className="text-sm text-gray-600">No database found</p>
-                )}
+                <div className="space-y-1">
+                  <p className="text-sm">
+                    <span className="text-gray-600">Mode: </span>
+                    <span className={`font-medium ${systemInfo.database.isMultiTenant ? 'text-blue-600' : 'text-purple-600'}`}>
+                      {systemInfo.database.mode}
+                    </span>
+                  </p>
+                  <p className="text-sm">
+                    <span className="text-gray-600">Status: </span>
+                    <span className={`font-medium ${
+                      systemInfo.database.status === 'Connected' ? 'text-green-600' : 
+                      systemInfo.database.status === 'Disconnected' ? 'text-yellow-600' : 'text-red-600'
+                    }`}>
+                      {systemInfo.database.status}
+                    </span>
+                  </p>
+                  
+                  {systemInfo.database.error && (
+                    <p className="text-sm text-red-600">Error: {systemInfo.database.error}</p>
+                  )}
+                  
+                  {/* Database-specific details */}
+                  {systemInfo.database.details && (
+                    <div className="mt-2 space-y-1">
+                      <p className="text-sm text-gray-600">Type: {systemInfo.database.details.type}</p>
+                      
+                      {systemInfo.database.isMultiTenant ? (
+                        // PostgreSQL details
+                        <>
+                          <p className="text-sm text-gray-600">Host: {systemInfo.database.details.host}:{systemInfo.database.details.port}</p>
+                          <p className="text-sm text-gray-600">Database: {systemInfo.database.details.database}</p>
+                          {typeof systemInfo.database.details.tenantCount !== 'undefined' && (
+                            <>
+                              <p className="text-sm text-gray-600">Tenants: {systemInfo.database.details.tenantCount}</p>
+                              <p className="text-sm text-gray-600">Total Cards: {systemInfo.database.details.totalCards}</p>
+                              <p className="text-sm text-gray-600">Total Users: {systemInfo.database.details.totalUsers}</p>
+                            </>
+                          )}
+                          <p className="text-sm text-gray-600">Connection Pool: {systemInfo.database.details.connectionPool}</p>
+                          <p className="text-sm text-gray-600">Backup Method: pg_dump + JSON fallback</p>
+                        </>
+                      ) : (
+                        // SQLite details
+                        systemInfo.database.details.file && (
+                          <>
+                            <p className="text-sm text-gray-600">File: {systemInfo.database.details.file.exists ? 'Found' : 'Missing'}</p>
+                            {systemInfo.database.details.file.exists && (
+                              <>
+                                <p className="text-sm text-gray-600">Size: {systemInfo.database.details.file.size}</p>
+                                <p className="text-sm text-gray-600">Modified: {formatDate(systemInfo.database.details.file.modified)}</p>
+                              </>
+                            )}
+                            {typeof systemInfo.database.details.totalCards !== 'undefined' && (
+                              <>
+                                <p className="text-sm text-gray-600">Total Cards: {systemInfo.database.details.totalCards}</p>
+                                <p className="text-sm text-gray-600">Total Users: {systemInfo.database.details.totalUsers}</p>
+                              </>
+                            )}
+                            <p className="text-sm text-gray-600">Backup Method: File copy + verification</p>
+                          </>
+                        )
+                      )}
+                      
+                      {/* Features */}
+                      {systemInfo.database.details.features && (
+                        <div className="mt-2">
+                          <p className="text-xs text-gray-500 mb-1">Features:</p>
+                          <div className="flex flex-wrap gap-1">
+                            {systemInfo.database.details.features.map((feature, idx) => (
+                              <span key={idx} className="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded">
+                                {feature}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
               
               <div>

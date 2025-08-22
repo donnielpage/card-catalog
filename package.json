@@ -1,6 +1,6 @@
 {
   "name": "cardvault",
-  "version": "2.0.0-rc",
+  "version": "2.1.0-alpha",
   "private": true,
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
@@ -12,16 +12,21 @@
     "lint": "next lint",
     "kill-port": "lsof -ti:3000 | xargs kill -9 2>/dev/null || true",
     "kill-all": "pkill -f next 2>/dev/null || true",
-    "clean-dev": "npm run kill-all && next dev -H 0.0.0.0"
+    "clean-dev": "npm run kill-all && next dev -H 0.0.0.0",
+    "migrate:sqlite-to-postgres": "node scripts/migrate-sqlite-to-postgres.js",
+    "verify:migration": "node scripts/verify-migration.js",
+    "db:setup": "psql -d $POSTGRES_DB -U $POSTGRES_USER -f schema_postgresql.sql"
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/multer": "^2.0.0",
+    "@types/pg": "^8.15.5",
     "@types/sqlite3": "^3.1.11",
     "bcryptjs": "^3.0.2",
     "multer": "^2.0.2",
     "next": "15.4.3",
     "next-auth": "^4.24.11",
+    "pg": "^8.16.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "sqlite3": "^5.1.7"

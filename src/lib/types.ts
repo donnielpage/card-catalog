@@ -21,6 +21,7 @@ export interface Team {
   id?: number;
   city: string;
   mascot?: string;
+  teamname: string;
   primary_color?: string;
   secondary_color?: string;
   accent_color?: string;
@@ -43,18 +44,32 @@ export interface CardWithDetails extends Card {
   manufacturer_subsetname?: string;
 }
 
+// Hierarchical Role Types
+export type GlobalRole = 'global_admin' | 'global_operator' | 'user';
+export type OrganizationRole = 'org_admin' | 'user';
+
 export interface User {
-  id: number;
+  id: number | string;
   username: string;
   email: string;
   firstname: string;
   lastname: string;
   password_hash: string;
-  role: 'user' | 'manager' | 'admin';
-  favorite_team_id?: number;
-  favorite_player_id?: number;
+  role: GlobalRole;
+  tenant_id?: string;
+  tenant_role?: OrganizationRole;
+  favorite_team_id?: number | string;
+  favorite_player_id?: number | string;
   created_at: string;
   updated_at: string;
+}
+
+export interface HierarchicalUser extends User {
+  tenant_id: string;
+  global_role: GlobalRole;
+  organization_role: OrganizationRole;
+  tenant_name?: string;
+  tenant_slug?: string;
 }
 
 export interface Session {
@@ -63,7 +78,8 @@ export interface Session {
   expires_at: string;
 }
 
-export type UserRole = 'user' | 'manager' | 'admin';
+// Legacy type for backwards compatibility
+export type UserRole = 'user' | 'manager' | 'admin' | 'global_admin' | 'global_operator';
 
 export interface AuthUser {
   id: number;
@@ -72,6 +88,22 @@ export interface AuthUser {
   firstname: string;
   lastname: string;
   role: UserRole;
-  favorite_team_id?: number;
-  favorite_player_id?: number;
+  global_role?: GlobalRole;
+  organization_role?: OrganizationRole;
+  tenant_id?: string;
+  tenant_name?: string;
+  tenant_slug?: string;
+  favorite_team_id?: number | string;
+  favorite_player_id?: number | string;
+}
+
+export interface Tenant {
+  id: string;
+  name: string;
+  slug: string;
+  subscription_tier?: string;
+  max_users?: number;
+  status?: string;
+  created_at?: string;
+  updated_at?: string;
 }

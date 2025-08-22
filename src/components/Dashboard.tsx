@@ -11,13 +11,14 @@ import UserManagement from '@/components/UserManagement';
 import UserProfile from '@/components/UserProfile';
 import SystemManagement from '@/components/SystemManagement';
 import CardFilters from '@/components/CardFilters';
+import OrganizationManagement from '@/components/OrganizationManagement';
 import FeaturePopup from '@/components/FeaturePopup';
 import { Card, CardWithDetails } from '@/lib/types';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function Dashboard() {
   const { data: session } = useSession();
-  const { canCreate, canModify, canManageUsers } = useAuth();
+  const { canCreate, canModify, canManageUsers, canManageGlobalSystem, canManageOrganizationUsers } = useAuth();
   const [currentPage, setCurrentPage] = useState('cards');
   const [showForm, setShowForm] = useState(false);
   const [editingCard, setEditingCard] = useState<CardWithDetails | null>(null);
@@ -164,9 +165,13 @@ export default function Dashboard() {
       case 'manage':
         return <ManageData />;
       case 'users':
-        return canManageUsers ? <UserManagement /> : <div className="text-center py-8 text-red-600">Access denied. Admin privileges required.</div>;
+        return canManageOrganizationUsers ? <UserManagement /> : <div className="text-center py-8 text-red-600">Access denied. Admin privileges required.</div>;
+      case 'global-users':
+        return canManageGlobalSystem ? <UserManagement /> : <div className="text-center py-8 text-red-600">Access denied. Global Admin privileges required.</div>;
+      case 'organizations':
+        return canManageGlobalSystem ? <OrganizationManagement /> : <div className="text-center py-8 text-red-600">Access denied. Global Admin privileges required.</div>;
       case 'system-management':
-        return session?.user?.role === 'admin' ? <SystemManagement /> : <div className="text-center py-8 text-red-600">Access denied. Admin privileges required.</div>;
+        return canManageGlobalSystem ? <SystemManagement /> : <div className="text-center py-8 text-red-600">Access denied. Global Admin privileges required.</div>;
       case 'profile':
         return <UserProfile />;
       default:

@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useSession } from 'next-auth/react';
 import { Team, Player } from '@/lib/types';
 
 export default function UserProfile() {
   const { user } = useAuth();
+  const { update } = useSession();
   const [teams, setTeams] = useState<Team[]>([]);
   const [players, setPlayers] = useState<Player[]>([]);
   const [favorites, setFavorites] = useState({
@@ -69,8 +71,8 @@ export default function UserProfile() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          favorite_team_id: favorites.favorite_team_id ? parseInt(favorites.favorite_team_id.toString()) : null,
-          favorite_player_id: favorites.favorite_player_id ? parseInt(favorites.favorite_player_id.toString()) : null,
+          favorite_team_id: favorites.favorite_team_id || null,
+          favorite_player_id: favorites.favorite_player_id || null,
         }),
       });
 
@@ -80,8 +82,8 @@ export default function UserProfile() {
 
       if (response.ok) {
         setMessage('Favorites updated successfully!');
-        // Refresh user data
-        window.location.reload();
+        // Trigger session refresh to get updated user data
+        await update();
       } else {
         setMessage(data.error || 'Failed to update favorites');
       }

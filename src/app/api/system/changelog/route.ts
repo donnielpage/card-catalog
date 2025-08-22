@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { authOptions, canManageGlobalSystem } from '@/lib/auth';
+import { GlobalRole } from '@/lib/types';
 import { getLatestChangelog, getChangelogByVersion, getChangesSince } from '@/lib/changelog';
 
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session || session.user.role !== 'admin') {
+    const globalRole = session?.user?.global_role as GlobalRole;
+    
+    if (!session || !canManageGlobalSystem(globalRole)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

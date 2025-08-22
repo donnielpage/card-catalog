@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import DatabaseFactory from '@/lib/database-factory';
 
 export async function GET() {
   try {
@@ -19,9 +20,27 @@ export async function GET() {
       installDate = null;
     }
 
+    // Get database mode information
+    const isMultiTenant = process.env.ENABLE_MULTI_TENANT === 'true';
+    const databaseMode = isMultiTenant ? 'PostgreSQL Multi-Tenant' : 'SQLite Legacy';
+    const environment = process.env.NODE_ENV || 'development';
+    
+    // Test database connection
+    let dbStatus = 'Unknown';
+    try {
+      const connectionTest = await DatabaseFactory.testConnection();
+      dbStatus = connectionTest ? 'Connected' : 'Disconnected';
+    } catch {
+      dbStatus = 'Error';
+    }
+
     return NextResponse.json({
       version,
-      installDate
+      installDate,
+      databaseMode,
+      databaseStatus: dbStatus,
+      environment,
+      isMultiTenant
     });
   } catch (error) {
     console.error('Error reading app info:', error);

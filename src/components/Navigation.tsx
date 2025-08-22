@@ -5,6 +5,7 @@ import { signOut } from 'next-auth/react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { Team } from '@/lib/types';
 import { getTeamLogoColors } from '@/lib/colorUtils';
+import TenantSelector from './TenantSelector';
 
 interface NavigationProps {
   currentPage: string;
@@ -12,12 +13,20 @@ interface NavigationProps {
 }
 
 export default function Navigation({ currentPage, onPageChange }: NavigationProps) {
-  const { user, canManageUsers } = useAuth();
+  const { 
+    user, 
+    canManageUsers, 
+    canManageOrganizationUsers,
+    canManageGlobalSystem,
+    isGlobalAdmin,
+    isGlobalOperator 
+  } = useAuth();
   const [userTeam, setUserTeam] = useState<Team | null>(null);
   
   const handleSignOut = () => {
-    // Let NextAuth handle the redirect using the configured signOut page
-    signOut();
+    // Force redirect to correct port by providing explicit callbackUrl
+    const currentOrigin = window.location.origin;
+    signOut({ callbackUrl: `${currentOrigin}/auth/signin` });
   };
 
   // Fetch user's favorite team colors
@@ -90,11 +99,14 @@ export default function Navigation({ currentPage, onPageChange }: NavigationProp
                 <div className="flex items-center space-x-2">
                   <span className="text-sm font-medium text-slate-200">Welcome, {user.username}</span>
                   <span className={`text-xs px-3 py-1 rounded-full font-medium shadow-sm ${
-                    user.role === 'admin' ? 'role-admin' :
+                    user.organization_role === 'org_admin' ? 'role-admin' :
+                    user.global_role === 'global_admin' ? 'role-admin' :
                     user.role === 'manager' ? 'role-manager' :
                     'role-user'
                   }`}>
-                    {user.role.toUpperCase()}
+                    {user.organization_role === 'org_admin' ? 'ORG ADMIN' : 
+                     user.global_role === 'global_admin' ? 'GLOBAL ADMIN' :
+                     user.role?.toUpperCase() || 'USER'}
                   </span>
                   {userTeam && (
                     <span className="text-xs text-slate-300 bg-slate-600 px-2 py-1 rounded-full">
@@ -102,44 +114,63 @@ export default function Navigation({ currentPage, onPageChange }: NavigationProp
                     </span>
                   )}
                 </div>
+                <TenantSelector />
               </div>
               
               {/* Navigation Menu */}
               <div className="flex space-x-3">
-                <button
-                  onClick={() => onPageChange('cards')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 relative ${
-                    currentPage === 'cards'
-                      ? 'text-white transform scale-105 shadow-lg bg-blue-600 hover:bg-blue-700'
-                      : 'text-slate-300 hover:bg-slate-600 hover:text-white hover:scale-105'
-                  }`}
-                >
-                  <span>🃏</span>
-                  <span>Cards</span>
-                </button>
-                <button
-                  onClick={() => onPageChange('reports')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 relative ${
-                    currentPage === 'reports'
-                      ? 'text-white transform scale-105 shadow-lg bg-emerald-600 hover:bg-emerald-700'
-                      : 'text-slate-300 hover:bg-slate-600 hover:text-white hover:scale-105'
-                  }`}
-                >
-                  <span>📊</span>
-                  <span>Reports</span>
-                </button>
-                <button
-                  onClick={() => onPageChange('manage')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 relative ${
-                    currentPage === 'manage'
-                      ? 'text-white transform scale-105 shadow-lg bg-orange-600 hover:bg-orange-700'
-                      : 'text-slate-300 hover:bg-slate-600 hover:text-white hover:scale-105'
-                  }`}
-                >
-                  <span>⚙️</span>
-                  <span>Manage</span>
-                </button>
-                {canManageUsers && (
+                {/* Cards, Reports, Manage - Hidden for Global Admins */}
+                {!isGlobalAdmin && (
+                  <>
+                    <button
+                      onClick={() => onPageChange('cards')}
+                      className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 relative ${
+                        currentPage === 'cards'
+                          ? 'text-white transform scale-105 shadow-lg bg-blue-600 hover:bg-blue-700'
+                          : 'text-slate-300 hover:bg-slate-600 hover:text-white hover:scale-105'
+                      }`}
+                    >
+                      <span>🃏</span>
+                      <span>Cards</span>
+                    </button>
+                    <button
+                      onClick={() => onPageChange('reports')}
+                      className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 relative ${
+                        currentPage === 'reports'
+                          ? 'text-white transform scale-105 shadow-lg bg-emerald-600 hover:bg-emerald-700'
+                          : 'text-slate-300 hover:bg-slate-600 hover:text-white hover:scale-105'
+                      }`}
+                    >
+                      <span>📊</span>
+                      <span>Reports</span>
+                    </button>
+                    <button
+                      onClick={() => onPageChange('manage')}
+                      className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 relative ${
+                        currentPage === 'manage'
+                          ? 'text-white transform scale-105 shadow-lg bg-orange-600 hover:bg-orange-700'
+                          : 'text-slate-300 hover:bg-slate-600 hover:text-white hover:scale-105'
+                      }`}
+                    >
+                      <span>⚙️</span>
+                      <span>Manage</span>
+                    </button>
+                  </>
+                )}
+                {/* Users menu - role-specific display */}
+                {isGlobalAdmin ? (
+                  <button
+                    onClick={() => onPageChange('global-users')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 relative ${
+                      currentPage === 'global-users'
+                        ? 'text-white transform scale-105 shadow-lg bg-purple-600 hover:bg-purple-700'
+                        : 'text-slate-300 hover:bg-slate-600 hover:text-white hover:scale-105'
+                    }`}
+                  >
+                    <span>👥</span>
+                    <span>Global Users</span>
+                  </button>
+                ) : canManageOrganizationUsers && (
                   <button
                     onClick={() => onPageChange('users')}
                     className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 relative ${
@@ -152,18 +183,31 @@ export default function Navigation({ currentPage, onPageChange }: NavigationProp
                     <span>Users</span>
                   </button>
                 )}
-                {user?.role === 'admin' && (
-                  <button
-                    onClick={() => onPageChange('system-management')}
-                    className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 relative ${
-                      currentPage === 'system-management'
-                        ? 'text-white transform scale-105 shadow-lg bg-red-600 hover:bg-red-700'
-                        : 'text-slate-300 hover:bg-slate-600 hover:text-white hover:scale-105'
-                    }`}
-                  >
-                    <span>🔧</span>
-                    <span>System</span>
-                  </button>
+                {canManageGlobalSystem && (
+                  <>
+                    <button
+                      onClick={() => onPageChange('organizations')}
+                      className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 relative ${
+                        currentPage === 'organizations'
+                          ? 'text-white transform scale-105 shadow-lg bg-cyan-600 hover:bg-cyan-700'
+                          : 'text-slate-300 hover:bg-slate-600 hover:text-white hover:scale-105'
+                      }`}
+                    >
+                      <span>🏢</span>
+                      <span>Organizations</span>
+                    </button>
+                    <button
+                      onClick={() => onPageChange('system-management')}
+                      className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 relative ${
+                        currentPage === 'system-management'
+                          ? 'text-white transform scale-105 shadow-lg bg-red-600 hover:bg-red-700'
+                          : 'text-slate-300 hover:bg-slate-600 hover:text-white hover:scale-105'
+                      }`}
+                    >
+                      <span>🔧</span>
+                      <span>System</span>
+                    </button>
+                  </>
                 )}
                 <button
                   onClick={() => onPageChange('profile')}

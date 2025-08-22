@@ -1,4 +1,8 @@
-# CardVault Installation Guide
+# CardVault Installation Guide (Legacy SQLite)
+
+> **⚠️ This guide is for legacy SQLite installations. For new installations, see [INSTALLATION.md](./INSTALLATION.md) for the recommended PostgreSQL multi-tenant setup.**
+> 
+> **🔄 Existing users**: See [UPGRADE_GUIDE.md](./UPGRADE_GUIDE.md) to migrate from SQLite to PostgreSQL.
 
 ## Fresh Installation
 

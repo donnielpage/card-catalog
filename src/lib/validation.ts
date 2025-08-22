@@ -108,16 +108,16 @@ export function validateCard(card: Record<string, unknown>): ValidationResult {
   const result = new ValidationResult();
   
   // Validate required fields
-  if (!card.card_number) {
-    result.addError('card_number', 'Card number is required');
-  } else if (typeof card.card_number === 'string') {
-    const cardNumResult = validateText(card.card_number, 'Card number', 50);
+  if (!card.cardnumber) {
+    result.addError('cardnumber', 'Card number is required');
+  } else if (typeof card.cardnumber === 'string') {
+    const cardNumResult = validateText(card.cardnumber, 'Card number', 50);
     if (!cardNumResult.isValid) {
       result.errors.push(...cardNumResult.errors);
       result.isValid = false;
     }
   } else {
-    result.addError('card_number', 'Card number must be a string');
+    result.addError('cardnumber', 'Card number must be a string');
   }
   
   // Validate year
@@ -150,13 +150,25 @@ export function validateCard(card: Record<string, unknown>): ValidationResult {
     result.addError('notes', 'Notes must be a string');
   }
   
-  // Validate IDs are positive integers
-  ['manufacturer_id', 'player_id', 'team_id'].forEach(field => {
+  // Validate IDs (support both integers and UUIDs for multi-tenant compatibility)
+  ['manufacturerid', 'playerid', 'teamid'].forEach(field => {
     if (card[field]) {
-      const idResult = validateNumber(card[field], field.replace('_', ' '), 1);
-      if (!idResult.isValid) {
-        result.errors.push(...idResult.errors);
-        result.isValid = false;
+      const value = card[field];
+      if (typeof value === 'string') {
+        // UUID validation for multi-tenant mode
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        if (!uuidRegex.test(value)) {
+          result.addError(field, `${field} must be a valid UUID`);
+        }
+      } else if (typeof value === 'number') {
+        // Integer validation for SQLite mode
+        const idResult = validateNumber(value, field, 1);
+        if (!idResult.isValid) {
+          result.errors.push(...idResult.errors);
+          result.isValid = false;
+        }
+      } else {
+        result.addError(field, `${field} must be a valid ID (number or UUID)`);
       }
     }
   });

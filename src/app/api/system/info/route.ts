@@ -1,15 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { authOptions, canManageGlobalSystem } from '@/lib/auth';
+import { GlobalRole } from '@/lib/types';
 import { readFileSync, statSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { spawn } from 'child_process';
+import DatabaseFactory from '@/lib/database-factory';
 
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session || session.user.role !== 'admin') {
+    const globalRole = session?.user?.global_role as GlobalRole;
+    
+    if (!session || !canManageGlobalSystem(globalRole)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -36,18 +40,93 @@ export async function GET() {
       upgradeDate = null;
     }
 
-    // Get database info
-    let databaseInfo = { exists: false, size: '0B', modified: 'Unknown' };
+    // Get database configuration and status
+    const isMultiTenant = process.env.ENABLE_MULTI_TENANT === 'true';
+    const databaseMode = isMultiTenant ? 'PostgreSQL Multi-Tenant' : 'SQLite Legacy';
+    const environment = process.env.NODE_ENV || 'development';
+    
+    // Test database connection
+    let connectionStatus = 'Unknown';
+    let connectionError = null;
     try {
-      const dbPath = join(process.cwd(), 'carddb.sqlite');
-      const stats = statSync(dbPath);
-      databaseInfo = {
-        exists: true,
-        size: formatFileSize(stats.size),
-        modified: stats.mtime.toISOString()
-      };
-    } catch {
-      // Database doesn't exist
+      const connectionTest = await DatabaseFactory.testConnection();
+      connectionStatus = connectionTest ? 'Connected' : 'Disconnected';
+    } catch (error) {
+      connectionStatus = 'Error';
+      connectionError = error instanceof Error ? error.message : 'Unknown error';
+    }
+
+    // Get database-specific information
+    let databaseDetails = {};
+    
+    if (isMultiTenant) {
+      // PostgreSQL information
+      try {
+        const db = DatabaseFactory.getInstance();
+        const tenants = await db.all('SELECT COUNT(*) as count FROM tenants') as any[];
+        const totalCards = await db.all('SELECT COUNT(*) as count FROM cards') as any[];
+        const totalUsers = await db.all('SELECT COUNT(*) as count FROM users') as any[];
+        
+        databaseDetails = {
+          type: 'PostgreSQL',
+          host: process.env.POSTGRES_HOST || 'localhost',
+          port: process.env.POSTGRES_PORT || '5432',
+          database: process.env.POSTGRES_DB || 'unknown',
+          tenantCount: tenants[0]?.count || 0,
+          totalCards: totalCards[0]?.count || 0,
+          totalUsers: totalUsers[0]?.count || 0,
+          connectionPool: 'Enabled',
+          features: ['Multi-Tenant', 'UUID Primary Keys', 'Row Level Security Ready']
+        };
+      } catch (error) {
+        databaseDetails = {
+          type: 'PostgreSQL',
+          host: process.env.POSTGRES_HOST || 'localhost',
+          port: process.env.POSTGRES_PORT || '5432',
+          database: process.env.POSTGRES_DB || 'unknown',
+          error: error instanceof Error ? error.message : 'Query failed'
+        };
+      }
+    } else {
+      // SQLite information
+      let sqliteInfo = { exists: false, size: '0B', modified: 'Unknown', path: '' };
+      try {
+        const dbPath = join(process.cwd(), 'carddb.sqlite');
+        const stats = statSync(dbPath);
+        sqliteInfo = {
+          exists: true,
+          size: formatFileSize(stats.size),
+          modified: stats.mtime.toISOString(),
+          path: dbPath
+        };
+
+        // Get SQLite data counts if connected
+        if (connectionStatus === 'Connected') {
+          const db = DatabaseFactory.getInstance();
+          const totalCards = await db.all('SELECT COUNT(*) as count FROM cards') as any[];
+          const totalUsers = await db.all('SELECT COUNT(*) as count FROM users') as any[];
+          
+          databaseDetails = {
+            type: 'SQLite',
+            file: sqliteInfo,
+            totalCards: totalCards[0]?.count || 0,
+            totalUsers: totalUsers[0]?.count || 0,
+            features: ['Single Tenant', 'Auto-increment IDs', 'File-based Storage']
+          };
+        } else {
+          databaseDetails = {
+            type: 'SQLite',
+            file: sqliteInfo,
+            features: ['Single Tenant', 'Auto-increment IDs', 'File-based Storage']
+          };
+        }
+      } catch (error) {
+        databaseDetails = {
+          type: 'SQLite',
+          file: { exists: false, error: 'Cannot access database file' },
+          features: ['Single Tenant', 'Auto-increment IDs', 'File-based Storage']
+        };
+      }
     }
 
     // Get image info
@@ -126,7 +205,14 @@ export async function GET() {
       version,
       installDate,
       upgradeDate,
-      database: databaseInfo,
+      environment,
+      database: {
+        mode: databaseMode,
+        status: connectionStatus,
+        error: connectionError,
+        details: databaseDetails,
+        isMultiTenant
+      },
       images: imageInfo,
       server: serverStatus
     });

@@ -123,7 +123,6 @@ export default function ManageData() {
               <tr>
                 {activeTab === 'players' && (
                   <>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">First Name</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Name</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date of Birth</th>
@@ -131,14 +130,12 @@ export default function ManageData() {
                 )}
                 {activeTab === 'teams' && (
                   <>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">City</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mascot</th>
                   </>
                 )}
                 {activeTab === 'manufacturers' && (
                   <>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subset Name</th>
@@ -150,12 +147,13 @@ export default function ManageData() {
             <tbody className="bg-white divide-y divide-gray-200">
               {data.map((item: Player | Team | Manufacturer) => (
                 <tr key={item.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.id}</td>
                   {activeTab === 'players' && (
                     <>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{(item as Player).firstname}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{(item as Player).lastname}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{(item as Player).dob || 'N/A'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {(item as Player).dob ? new Date((item as Player).dob!).toLocaleDateString() : 'N/A'}
+                      </td>
                     </>
                   )}
                   {activeTab === 'teams' && (

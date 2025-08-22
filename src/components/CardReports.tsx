@@ -97,73 +97,143 @@ export default function CardReports() {
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Card #
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Player
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Team
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Year
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Manufacturer
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Condition
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Notes
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {sorted.map((card) => (
-                <tr key={card.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    #{card.cardnumber}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {card.player_firstname} {card.player_lastname}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {card.team_city}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {card.year || 'N/A'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {card.manufacturer_company && (
-                      <>
-                        {card.manufacturer_company} {card.manufacturer_year && `(${card.manufacturer_year})`}{card.manufacturer_subsetname && ` - ${card.manufacturer_subsetname}`}
-                      </>
-                    ) || 'N/A'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                      card.condition === 'Mint' ? 'bg-green-100 text-green-800' :
-                      card.condition === 'Near Mint' ? 'bg-blue-100 text-blue-800' :
-                      card.condition === 'Excellent' ? 'bg-yellow-100 text-yellow-800' :
-                      card.condition === 'Very Good' ? 'bg-orange-100 text-orange-800' :
-                      card.condition === 'Good' ? 'bg-red-100 text-red-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
-                      {card.condition || 'N/A'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">
-                    {card.notes || '-'}
-                  </td>
+          {sortBy === 'year-manufacturer' ? (
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Manufacturer
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Year
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Subset
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Card Count
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Players
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {manufacturerYearStats.map(({ key, count }) => {
+                  const cardsInGroup = cards.filter(card => {
+                    const manufacturer = card.manufacturer_company || 'Unknown';
+                    const year = card.manufacturer_year || 'Unknown';
+                    const subset = card.manufacturer_subsetname ? ` - ${card.manufacturer_subsetname}` : '';
+                    return `${manufacturer} (${year})${subset}` === key;
+                  });
+                  const uniquePlayers = new Set(cardsInGroup.map(card => 
+                    `${card.player_firstname || ''} ${card.player_lastname || ''}`.trim()
+                  ).filter(name => name));
+                  
+                  const [manufacturerYear, subset] = key.includes(' - ') ? key.split(' - ') : [key, ''];
+                  const manufacturerMatch = manufacturerYear.match(/^(.+) \((.+)\)$/);
+                  const manufacturer = manufacturerMatch ? manufacturerMatch[1] : manufacturerYear;
+                  const year = manufacturerMatch ? manufacturerMatch[2] : 'Unknown';
+                  
+                  return (
+                    <tr key={key} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {manufacturer}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {year}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {subset || 'N/A'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                          {count} cards
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900">
+                        <div className="max-w-xs">
+                          <span className="text-gray-600">{uniquePlayers.size} unique:</span>
+                          <div className="text-xs text-gray-500 mt-1 truncate">
+                            {Array.from(uniquePlayers).slice(0, 3).join(', ')}
+                            {uniquePlayers.size > 3 && ` +${uniquePlayers.size - 3} more`}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : (
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Card #
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Player
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Team
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Year
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Manufacturer
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Condition
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Notes
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {sorted.map((card) => (
+                  <tr key={card.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      #{card.cardnumber}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {card.player_firstname} {card.player_lastname}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {card.team_city}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {card.year || 'N/A'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {card.manufacturer_company && (
+                        <>
+                          {card.manufacturer_company} {card.manufacturer_year && `(${card.manufacturer_year})`}{card.manufacturer_subsetname && ` - ${card.manufacturer_subsetname}`}
+                        </>
+                      ) || 'N/A'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                        card.condition === 'Mint' ? 'bg-green-100 text-green-800' :
+                        card.condition === 'Near Mint' ? 'bg-blue-100 text-blue-800' :
+                        card.condition === 'Excellent' ? 'bg-yellow-100 text-yellow-800' :
+                        card.condition === 'Very Good' ? 'bg-orange-100 text-orange-800' :
+                        card.condition === 'Good' ? 'bg-red-100 text-red-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {card.condition || 'N/A'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">
+                      {card.notes || '-'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 

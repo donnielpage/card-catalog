@@ -80,7 +80,7 @@ export default function CardForm({ card, onSubmit, onCancel }: CardFormProps) {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value === '' ? undefined : (name === 'year' || name.endsWith('id')) ? parseInt(value) || undefined : value
+      [name]: value === '' ? undefined : (name === 'year') ? parseInt(value) || undefined : value
     }));
   };
 
