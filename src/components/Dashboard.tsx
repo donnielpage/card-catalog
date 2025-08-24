@@ -26,7 +26,8 @@ export default function Dashboard() {
   const [allCards, setAllCards] = useState<CardWithDetails[]>([]);
   const [filteredCards, setFilteredCards] = useState<CardWithDetails[]>([]);
   const [cardsLoading, setCardsLoading] = useState(true);
-  const [appVersion, setAppVersion] = useState('2.0.0-rc');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [appVersion, setAppVersion] = useState('2.1.0');
 
   const fetchCards = useCallback(async () => {
     setCardsLoading(true);
@@ -70,7 +71,7 @@ export default function Dashboard() {
     setShowForm(true);
   };
 
-  const handleDeleteCard = async (id: number) => {
+  const handleDeleteCard = async (id: string | number) => {
     if (!canModify) {
       alert('You do not have permission to delete cards.');
       return;
@@ -150,12 +151,40 @@ export default function Dashboard() {
               <p className="text-sm text-gray-600">
                 Showing {filteredCards.length} of {allCards.length} cards
               </p>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-600">View:</span>
+                <div className="flex border border-gray-300 rounded-md overflow-hidden">
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`px-3 py-1 text-sm flex items-center space-x-1 ${
+                      viewMode === 'grid' 
+                        ? 'bg-blue-600 text-white' 
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span>⊞</span>
+                    <span>Grid</span>
+                  </button>
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`px-3 py-1 text-sm flex items-center space-x-1 border-l border-gray-300 ${
+                      viewMode === 'list' 
+                        ? 'bg-blue-600 text-white' 
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span>☰</span>
+                    <span>List</span>
+                  </button>
+                </div>
+              </div>
             </div>
             <CardList
               cards={filteredCards}
               onEdit={canModify ? handleEditCard : undefined}
               onDelete={canModify ? handleDeleteCard : undefined}
               loading={cardsLoading}
+              viewMode={viewMode}
               emptyMessage={filteredCards.length === 0 && allCards.length > 0 ? "No cards match the current filters." : "No cards found. Add your first card!"}
             />
           </div>

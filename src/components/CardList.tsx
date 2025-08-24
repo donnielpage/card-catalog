@@ -1,19 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+// import Image from 'next/image'; // Temporarily using regular img tag
 import { CardWithDetails } from '@/lib/types';
 import ImageModal from './ImageModal';
 
 interface CardListProps {
   cards: CardWithDetails[];
   onEdit?: (card: CardWithDetails) => void;
-  onDelete?: (id: number) => void;
+  onDelete?: (id: string | number) => void; // Support both UUID and number IDs
   loading?: boolean;
+  viewMode?: 'grid' | 'list';
   emptyMessage?: string;
 }
 
-export default function CardList({ cards, onEdit, onDelete, loading = false, emptyMessage = "No cards found. Add your first card!" }: CardListProps) {
+export default function CardList({ cards, onEdit, onDelete, loading = false, viewMode = 'grid', emptyMessage = "No cards found. Add your first card!" }: CardListProps) {
   const [modalImage, setModalImage] = useState<{ url: string; alt: string } | null>(null);
 
   const openImageModal = (imageUrl: string, cardNumber: string) => {
@@ -47,6 +48,144 @@ export default function CardList({ cards, onEdit, onDelete, loading = false, emp
     );
   }
 
+  if (viewMode === 'list') {
+    return (
+      <div className="space-y-3">
+        {cards.map((card, index) => (
+          <div 
+            key={card.id} 
+            className="bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow duration-200 animate-slide-in"
+            style={{ animationDelay: `${index * 0.05}s` }}
+          >
+            <div className="p-4 flex items-center space-x-4">
+              {/* Card Image */}
+              <div className="flex-shrink-0">
+                {card.imageurl ? (
+                  <div 
+                    className="w-16 h-24 bg-white cursor-pointer rounded border border-gray-300 overflow-hidden"
+                    onClick={() => openImageModal(card.imageurl!, card.cardnumber)}
+                  >
+                    <img
+                      src={card.imageurl}
+                      alt={`Card #${card.cardnumber}`}
+                      className="w-full h-full object-cover"
+                      style={{ 
+                        backgroundColor: 'white',
+                        display: 'block'
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-16 h-24 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center rounded border border-gray-300">
+                    <span className="text-gray-400 text-sm">🃏</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Card Details */}
+              <div className="flex-grow">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900">#{card.cardnumber}</h3>
+                    {card.year && <span className="text-sm text-gray-500">{card.year}</span>}
+                  </div>
+                  <div className="flex space-x-2">
+                    {onEdit && (
+                      <button
+                        onClick={() => onEdit(card)}
+                        className="btn text-xs px-2 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200"
+                      >
+                        ✏️ Edit
+                      </button>
+                    )}
+                    {onDelete && (
+                      <button
+                        onClick={() => onDelete(card.id!)}
+                        className="btn text-xs px-2 py-1 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200"
+                      >
+                        🗑️ Delete
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-1 text-sm">
+                  {/* Player Info */}
+                  {(card.player_firstname || card.player_lastname) && (
+                    <div className="flex items-center text-gray-700">
+                      <span className="mr-1">⚾</span>
+                      <span className="font-medium">
+                        {card.player_firstname} {card.player_lastname}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Team Info */}
+                  {card.team_city && (
+                    <div className="flex items-center text-gray-700">
+                      <span className="mr-1">🏟️</span>
+                      <span>
+                        {card.team_city}{card.team_mascot && ` ${card.team_mascot}`}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Manufacturer Info */}
+                  {card.manufacturer_company && (
+                    <div className="flex items-center text-gray-600">
+                      <span className="mr-1">🏭</span>
+                      <span className="truncate">
+                        {card.manufacturer_company}
+                        {card.manufacturer_year && ` (${card.manufacturer_year})`}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Condition */}
+                  {card.condition && (
+                    <div className="flex items-center">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                        ✨ {card.condition}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Manufacturer Subset */}
+                  {card.manufacturer_subsetname && (
+                    <div className="flex items-center text-gray-500 text-xs col-span-full">
+                      <span className="mr-1">📦</span>
+                      <span>{card.manufacturer_subsetname}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Notes */}
+                {card.notes && (
+                  <div className="mt-2 pt-2 border-t border-gray-100">
+                    <p className="text-gray-600 text-sm italic">
+                      💭 {card.notes}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+        
+        {/* Image Modal */}
+        {modalImage && (
+          <ImageModal
+            isOpen={true}
+            imageUrl={modalImage.url}
+            alt={modalImage.alt}
+            onClose={closeImageModal}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // Grid view (default)
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {cards.map((card, index) => (
@@ -58,23 +197,18 @@ export default function CardList({ cards, onEdit, onDelete, loading = false, emp
           {/* Card Image */}
           {card.imageurl ? (
             <div 
-              className="relative w-full h-56 bg-gradient-to-br from-gray-100 to-gray-200 cursor-pointer group overflow-hidden rounded-t-lg"
+              className="w-full h-56 bg-white cursor-pointer rounded-t-lg overflow-hidden"
               onClick={() => openImageModal(card.imageurl!, card.cardnumber)}
             >
-              <Image
+              <img
                 src={card.imageurl}
                 alt={`Card #${card.cardnumber}`}
-                fill
-                className="object-contain transition-transform duration-300 group-hover:scale-105"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
+                className="w-full h-full object-cover"
+                style={{ 
+                  backgroundColor: 'white',
+                  display: 'block'
                 }}
               />
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
-                <span className="text-white opacity-0 group-hover:opacity-100 font-medium bg-black bg-opacity-50 px-3 py-2 rounded-lg transition-opacity duration-300">
-                  🔍 View Full Size
-                </span>
-              </div>
             </div>
           ) : (
             <div className="w-full h-56 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center rounded-t-lg">

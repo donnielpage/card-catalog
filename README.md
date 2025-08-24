@@ -9,8 +9,10 @@ A modern web application built with Next.js for managing sports card collections
 - ⚾ **Team Integration**: All 30 MLB teams with official colors
 - ⭐ **Favorites System**: Set favorite teams/players with automatic filtering
 - 📊 **Advanced Reporting**: Detailed statistics and breakdowns
-- 🖼️ **Image Upload**: Upload and manage card images
+- 🖼️ **Image Upload**: Upload and manage card images with rotation/cropping tools
 - 🔍 **Smart Filtering**: Filter by manufacturer, year, player, team, and more
+- 📋 **Multiple Views**: Switch between grid and list view for your cards
+- 🔄 **Advanced Sorting**: Sort by card number, manufacturer year, card year, or player name
 - 🎨 **Dynamic Theming**: UI adapts to user's favorite team colors
 
 ## Quick Start
@@ -82,12 +84,14 @@ Uses SQLite database (`carddb.sqlite`) with the following tables:
 - CV logo dynamically changes to team colors
 - All 30 MLB teams with official primary/secondary/accent colors
 
-### Advanced Filtering
+### Advanced Filtering & Sorting
 - Filter by manufacturer + year combinations
 - Filter by specific players or teams
 - Full-text search across all card fields
 - Auto-apply user favorites as default filters
 - Toggle favorites filtering on/off
+- Sort by card number (smart numeric), manufacturer year, card year, or player name
+- Combine filtering and sorting for precise organization
 
 ### Role-Based Access
 - **User**: Can view and add cards
@@ -96,8 +100,16 @@ Uses SQLite database (`carddb.sqlite`) with the following tables:
 
 ### Image Management
 - Upload card images through web interface
+- Advanced image editing with rotation and cropping tools
 - Images stored in `public/uploads/`
 - Modal image viewer with full-size display
+- Mobile upload support via QR code
+
+### View Modes
+- **Grid View**: Traditional card layout with large images and detailed information
+- **List View**: Compact horizontal layout for quick scanning of multiple cards
+- Toggle between views based on your preference and workflow
+- Both views support all filtering, sorting, and management features
 
 ## Development
 

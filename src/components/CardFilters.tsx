@@ -15,6 +15,7 @@ export default function CardFilters({ cards, onFilterChange }: CardFiltersProps)
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
   const [selectedTeam, setSelectedTeam] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
+  const [sortBy, setSortBy] = useState<string>('');
   const [defaultsApplied, setDefaultsApplied] = useState(false);
   
   // Initialize favoritesEnabled from localStorage, default to true
@@ -155,14 +156,91 @@ export default function CardFilters({ cards, onFilterChange }: CardFiltersProps)
       });
     }
 
+    // Apply sorting
+    if (sortBy) {
+      switch (sortBy) {
+        case 'cardnumber-asc':
+          filtered.sort((a, b) => {
+            const aNum = a.cardnumber || '';
+            const bNum = b.cardnumber || '';
+            // Try to parse as numbers for proper numeric sorting
+            const aInt = parseInt(aNum);
+            const bInt = parseInt(bNum);
+            if (!isNaN(aInt) && !isNaN(bInt)) {
+              return aInt - bInt;
+            }
+            // Fall back to string comparison
+            return aNum.localeCompare(bNum);
+          });
+          break;
+        case 'cardnumber-desc':
+          filtered.sort((a, b) => {
+            const aNum = a.cardnumber || '';
+            const bNum = b.cardnumber || '';
+            // Try to parse as numbers for proper numeric sorting
+            const aInt = parseInt(aNum);
+            const bInt = parseInt(bNum);
+            if (!isNaN(aInt) && !isNaN(bInt)) {
+              return bInt - aInt;
+            }
+            // Fall back to string comparison
+            return bNum.localeCompare(aNum);
+          });
+          break;
+        case 'manufacturer-year-asc':
+          filtered.sort((a, b) => {
+            const aYear = a.manufacturer_year || 0;
+            const bYear = b.manufacturer_year || 0;
+            return aYear - bYear;
+          });
+          break;
+        case 'manufacturer-year-desc':
+          filtered.sort((a, b) => {
+            const aYear = a.manufacturer_year || 0;
+            const bYear = b.manufacturer_year || 0;
+            return bYear - aYear;
+          });
+          break;
+        case 'card-year-asc':
+          filtered.sort((a, b) => {
+            const aYear = a.year || 0;
+            const bYear = b.year || 0;
+            return aYear - bYear;
+          });
+          break;
+        case 'card-year-desc':
+          filtered.sort((a, b) => {
+            const aYear = a.year || 0;
+            const bYear = b.year || 0;
+            return bYear - aYear;
+          });
+          break;
+        case 'player-name-asc':
+          filtered.sort((a, b) => {
+            const aName = `${a.player_firstname || ''} ${a.player_lastname || ''}`.trim();
+            const bName = `${b.player_firstname || ''} ${b.player_lastname || ''}`.trim();
+            return aName.localeCompare(bName);
+          });
+          break;
+        case 'player-name-desc':
+          filtered.sort((a, b) => {
+            const aName = `${a.player_firstname || ''} ${a.player_lastname || ''}`.trim();
+            const bName = `${b.player_firstname || ''} ${b.player_lastname || ''}`.trim();
+            return bName.localeCompare(aName);
+          });
+          break;
+      }
+    }
+
     onFilterChange(filtered);
-  }, [cards, selectedManufacturerYear, selectedPlayer, selectedTeam, searchText]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [cards, selectedManufacturerYear, selectedPlayer, selectedTeam, searchText, sortBy]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const clearAllFilters = () => {
     setSelectedManufacturerYear('');
     setSelectedPlayer('');
     setSelectedTeam('');
     setSearchText('');
+    setSortBy('');
     setDefaultsApplied(true); // Prevent defaults from being reapplied immediately
     setFavoritesEnabled(false); // Disable favorites when clearing all filters
   };
@@ -177,6 +255,7 @@ export default function CardFilters({ cards, onFilterChange }: CardFiltersProps)
       setSelectedPlayer('');
       setSelectedTeam('');
       setSearchText('');
+      setSortBy('');
       setDefaultsApplied(false); // Allow defaults to be reapplied
     } else {
       // Disable favorites, clear current filters completely
@@ -184,11 +263,12 @@ export default function CardFilters({ cards, onFilterChange }: CardFiltersProps)
       setSelectedPlayer('');
       setSelectedTeam('');
       setSearchText('');
+      setSortBy('');
       setDefaultsApplied(true); // Prevent reapplication
     }
   };
 
-  const hasActiveFilters = selectedManufacturerYear || selectedPlayer || selectedTeam || searchText;
+  const hasActiveFilters = selectedManufacturerYear || selectedPlayer || selectedTeam || searchText || sortBy;
 
   return (
     <div className="bg-white rounded-lg shadow p-4 mb-6">
@@ -217,7 +297,7 @@ export default function CardFilters({ cards, onFilterChange }: CardFiltersProps)
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Search Text */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -288,6 +368,28 @@ export default function CardFilters({ cards, onFilterChange }: CardFiltersProps)
             ))}
           </select>
         </div>
+
+        {/* Sort By */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Sort By
+          </label>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+          >
+            <option value="">Default Order</option>
+            <option value="cardnumber-asc">Card Number (A-Z)</option>
+            <option value="cardnumber-desc">Card Number (Z-A)</option>
+            <option value="manufacturer-year-asc">Manufacturer Year (Oldest)</option>
+            <option value="manufacturer-year-desc">Manufacturer Year (Newest)</option>
+            <option value="card-year-asc">Card Year (Oldest)</option>
+            <option value="card-year-desc">Card Year (Newest)</option>
+            <option value="player-name-asc">Player Name (A-Z)</option>
+            <option value="player-name-desc">Player Name (Z-A)</option>
+          </select>
+        </div>
       </div>
 
       {/* Active Filters Display */}
@@ -338,6 +440,27 @@ export default function CardFilters({ cards, onFilterChange }: CardFiltersProps)
               <button
                 onClick={() => setSearchText('')}
                 className="ml-1 hover:text-gray-600"
+              >
+                ×
+              </button>
+            </span>
+          )}
+          {sortBy && (
+            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+              Sort: {
+                sortBy === 'cardnumber-asc' ? 'Card Number (A-Z)' :
+                sortBy === 'cardnumber-desc' ? 'Card Number (Z-A)' :
+                sortBy === 'manufacturer-year-asc' ? 'Manufacturer Year (Oldest)' :
+                sortBy === 'manufacturer-year-desc' ? 'Manufacturer Year (Newest)' :
+                sortBy === 'card-year-asc' ? 'Card Year (Oldest)' :
+                sortBy === 'card-year-desc' ? 'Card Year (Newest)' :
+                sortBy === 'player-name-asc' ? 'Player Name (A-Z)' :
+                sortBy === 'player-name-desc' ? 'Player Name (Z-A)' :
+                sortBy
+              }
+              <button
+                onClick={() => setSortBy('')}
+                className="ml-1 hover:text-orange-600"
               >
                 ×
               </button>
