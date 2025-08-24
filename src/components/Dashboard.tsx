@@ -27,7 +27,7 @@ export default function Dashboard() {
   const [filteredCards, setFilteredCards] = useState<CardWithDetails[]>([]);
   const [cardsLoading, setCardsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [appVersion, setAppVersion] = useState('2.1.0');
+  const [appVersion, setAppVersion] = useState('2.2.0');
 
   const fetchCards = useCallback(async () => {
     setCardsLoading(true);
