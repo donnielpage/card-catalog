@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # Media Service
+  media-service:
+    build:
+      context: ./media-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - NEXTAUTH_SECRET=test-secret-key
+      - CORS_ORIGIN=http://localhost:3000
+      - BASE_URL=http://localhost:3001
+    volumes:
+      - media-uploads:/app/uploads
+    networks:
+      - cardvault-network
+
+  # API Gateway (nginx)
+  api-gateway:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx-simple.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - media-service
+    networks:
+      - cardvault-network
+
+volumes:
+  media-uploads:
+
+networks:
+  cardvault-network:
+    driver: bridge
