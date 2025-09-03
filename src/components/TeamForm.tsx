@@ -3,6 +3,40 @@
 import { useState, useEffect } from 'react';
 import { Team } from '@/lib/types';
 
+// MLB team colors extracted from official team data
+const MLB_TEAM_COLORS = [
+  { name: 'Atlanta Braves', primary: '#ce1141', secondary: '#13274f', accent: '#eaaa00' },
+  { name: 'Miami Marlins', primary: '#ff6600', secondary: '#0077c8', accent: '#ffd100' },
+  { name: 'New York Mets', primary: '#002f6c', secondary: '#ffa500', accent: '#ffffff' },
+  { name: 'Philadelphia Phillies', primary: '#e81828', secondary: '#002d72', accent: '#ffffff' },
+  { name: 'Washington Nationals', primary: '#ab0003', secondary: '#14225a', accent: '#ffffff' },
+  { name: 'Chicago Cubs', primary: '#0e3386', secondary: '#cc3433', accent: '#ffffff' },
+  { name: 'Cincinnati Reds', primary: '#c6011f', secondary: '#000000', accent: '#ffffff' },
+  { name: 'Milwaukee Brewers', primary: '#0a2351', secondary: '#b6922e', accent: '#ffffff' },
+  { name: 'Pittsburgh Pirates', primary: '#000000', secondary: '#fdb827', accent: '#ffffff' },
+  { name: 'St. Louis Cardinals', primary: '#c41e3a', secondary: '#0c2340', accent: '#ffd200' },
+  { name: 'Arizona Diamondbacks', primary: '#a71930', secondary: '#e3d4ad', accent: '#000000' },
+  { name: 'Colorado Rockies', primary: '#33006f', secondary: '#c4ced4', accent: '#000000' },
+  { name: 'Los Angeles Dodgers', primary: '#005a9c', secondary: '#c4ced4', accent: '#ef3e42' },
+  { name: 'San Diego Padres', primary: '#0c2340', secondary: '#ffc62f', accent: '#ffffff' },
+  { name: 'San Francisco Giants', primary: '#fd5a1e', secondary: '#000000', accent: '#c4ced4' },
+  { name: 'Baltimore Orioles', primary: '#df4601', secondary: '#000000', accent: '#ffffff' },
+  { name: 'Boston Red Sox', primary: '#bd3039', secondary: '#192c55', accent: '#ffffff' },
+  { name: 'New York Yankees', primary: '#0c2340', secondary: '#ffffff', accent: '#c4ced4' },
+  { name: 'Tampa Bay Rays', primary: '#092c5c', secondary: '#8fbce6', accent: '#f5d130' },
+  { name: 'Toronto Blue Jays', primary: '#134a8e', secondary: '#1d2d5c', accent: '#e8291c' },
+  { name: 'Chicago White Sox', primary: '#000000', secondary: '#c4ced4', accent: '#ffffff' },
+  { name: 'Cleveland Guardians', primary: '#00385d', secondary: '#e50022', accent: '#ffffff' },
+  { name: 'Detroit Tigers', primary: '#182d55', secondary: '#f26722', accent: '#ffffff' },
+  { name: 'Kansas City Royals', primary: '#174885', secondary: '#c0995a', accent: '#ffffff' },
+  { name: 'Minnesota Twins', primary: '#002b5c', secondary: '#d31145', accent: '#cfac7a' },
+  { name: 'Houston Astros', primary: '#002d62', secondary: '#eb6e1f', accent: '#e7e9ea' },
+  { name: 'Los Angeles Angels', primary: '#ba0021', secondary: '#003263', accent: '#ffffff' },
+  { name: 'Oakland Athletics', primary: '#003831', secondary: '#ebb742', accent: '#c4ced4' },
+  { name: 'Seattle Mariners', primary: '#0c2c56', secondary: '#005c5c', accent: '#d50032' },
+  { name: 'Texas Rangers', primary: '#003278', secondary: '#c0111f', accent: '#ffffff' }
+];
+
 interface TeamFormProps {
   team?: Team | null;
   onSubmit: (team: Omit<Team, 'id'>) => void;
@@ -42,6 +76,15 @@ export default function TeamForm({ team, onSubmit, onCancel }: TeamFormProps) {
     setFormData(prev => ({
       ...prev,
       [name]: value === '' ? undefined : value
+    }));
+  };
+
+  const applyMLBColors = (mlbTeam: typeof MLB_TEAM_COLORS[0]) => {
+    setFormData(prev => ({
+      ...prev,
+      primary_color: mlbTeam.primary,
+      secondary_color: mlbTeam.secondary,
+      accent_color: mlbTeam.accent
     }));
   };
 
@@ -96,6 +139,28 @@ export default function TeamForm({ team, onSubmit, onCancel }: TeamFormProps) {
 
           <div className="space-y-4">
             <h4 className="text-sm font-semibold text-gray-800 border-b pb-2">Team Colors</h4>
+            
+            <div className="bg-blue-50 p-3 rounded-lg">
+              <h5 className="text-xs font-medium text-gray-700 mb-2">Quick Select MLB Team Colors</h5>
+              <div className="grid grid-cols-2 gap-1 max-h-32 overflow-y-auto">
+                {MLB_TEAM_COLORS.map((mlbTeam, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => applyMLBColors(mlbTeam)}
+                    className="flex items-center space-x-2 p-2 text-left hover:bg-blue-100 rounded text-xs"
+                    title={`Apply ${mlbTeam.name} colors`}
+                  >
+                    <div className="flex space-x-1">
+                      <div className="w-3 h-3 rounded-full border" style={{backgroundColor: mlbTeam.primary}}></div>
+                      <div className="w-3 h-3 rounded-full border" style={{backgroundColor: mlbTeam.secondary}}></div>
+                      <div className="w-3 h-3 rounded-full border" style={{backgroundColor: mlbTeam.accent}}></div>
+                    </div>
+                    <span className="truncate">{mlbTeam.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>

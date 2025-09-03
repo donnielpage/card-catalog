@@ -3,12 +3,19 @@
 import { useState, useEffect } from 'react';
 import { User, Team } from '@/lib/types';
 
+interface ExtendedUser extends User {
+  organization_name?: string;
+  organization_slug?: string;
+  organization_status?: string;
+}
+
 export default function UserManagement() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<ExtendedUser[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editingUser, setEditingUser] = useState<ExtendedUser | null>(null);
+  const [groupByOrganization, setGroupByOrganization] = useState(true);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -127,6 +134,50 @@ export default function UserManagement() {
     setError('');
   };
 
+  // Group users by organization
+  const getGroupedUsers = () => {
+    if (!groupByOrganization) {
+      return { 'All Users': users };
+    }
+
+    const grouped: { [key: string]: ExtendedUser[] } = {};
+    
+    users.forEach(user => {
+      const orgName = user.organization_name || 'No Organization';
+      if (!grouped[orgName]) {
+        grouped[orgName] = [];
+      }
+      grouped[orgName].push(user);
+    });
+
+    // Sort organizations, but put "No Organization" last
+    const sortedKeys = Object.keys(grouped).sort((a, b) => {
+      if (a === 'No Organization') return 1;
+      if (b === 'No Organization') return -1;
+      return a.localeCompare(b);
+    });
+
+    const sortedGrouped: { [key: string]: ExtendedUser[] } = {};
+    sortedKeys.forEach(key => {
+      sortedGrouped[key] = grouped[key];
+    });
+
+    return sortedGrouped;
+  };
+
+  const getOrganizationStatusBadge = (status: string) => {
+    switch (status) {
+      case 'active': 
+        return 'bg-green-100 text-green-800';
+      case 'inactive': 
+        return 'bg-yellow-100 text-yellow-800';
+      case 'suspended': 
+        return 'bg-red-100 text-red-800';
+      default: 
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
       case 'admin': return 'bg-red-100 text-red-800';
@@ -162,13 +213,30 @@ export default function UserManagement() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">User Management</h2>
-        <button
-          onClick={() => setShowForm(true)}
-          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Add New User
-        </button>
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Global User Management</h2>
+          <p className="text-sm text-gray-600 mt-1">Manage users across all organizations</p>
+        </div>
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center">
+            <input
+              id="group-toggle"
+              type="checkbox"
+              checked={groupByOrganization}
+              onChange={(e) => setGroupByOrganization(e.target.checked)}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label htmlFor="group-toggle" className="ml-2 text-sm text-gray-700">
+              Group by Organization
+            </label>
+          </div>
+          <button
+            onClick={() => setShowForm(true)}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Add New User
+          </button>
+        </div>
       </div>
 
       {showForm && (
@@ -270,55 +338,96 @@ export default function UserManagement() {
         </div>
       )}
 
-      <div className="bg-white shadow overflow-hidden sm:rounded-md">
-        <ul className="divide-y divide-gray-200">
-          {users.map((user) => (
-            <li key={user.id}>
-              <div className="px-4 py-4 flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div 
-                      className="h-10 w-10 rounded-full border-2 flex items-center justify-center"
-                      style={getUserAvatarColors(user)}
-                    >
-                      <span className="text-sm font-medium">
-                        {user.firstname?.charAt(0)}{user.lastname?.charAt(0)}
+      <div className="space-y-6">
+        {Object.entries(getGroupedUsers()).map(([orgName, orgUsers]) => (
+          <div key={orgName} className="bg-white shadow overflow-hidden sm:rounded-md">
+            {groupByOrganization && (
+              <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <h3 className="text-lg font-medium text-gray-900">{orgName}</h3>
+                    {orgUsers[0]?.organization_status && orgName !== 'No Organization' && (
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getOrganizationStatusBadge(orgUsers[0].organization_status)}`}>
+                        {orgUsers[0].organization_status}
                       </span>
-                    </div>
+                    )}
                   </div>
-                  <div className="ml-4">
-                    <div className="flex items-center">
-                      <div className="text-sm font-medium text-gray-900">
-                        {user.firstname} {user.lastname} ({user.username})
-                      </div>
-                      <span className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor(user.role)}`}>
-                        {user.role}
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-500">{user.email}</div>
-                    <div className="text-xs text-gray-400">
-                      Created: {new Date(user.created_at).toLocaleDateString()}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => handleEdit(user)}
-                    className="text-blue-600 hover:text-blue-900 text-sm font-medium"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(user.id)}
-                    className="text-red-600 hover:text-red-900 text-sm font-medium"
-                  >
-                    Delete
-                  </button>
+                  <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">
+                    {orgUsers.length} user{orgUsers.length !== 1 ? 's' : ''}
+                  </span>
                 </div>
               </div>
-            </li>
-          ))}
-        </ul>
+            )}
+            <ul className="divide-y divide-gray-200">
+              {orgUsers.map((user) => (
+                <li key={user.id}>
+                  <div className="px-4 py-4 flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0">
+                        <div 
+                          className="h-10 w-10 rounded-full border-2 flex items-center justify-center"
+                          style={getUserAvatarColors(user)}
+                        >
+                          <span className="text-sm font-medium">
+                            {user.firstname?.charAt(0)}{user.lastname?.charAt(0)}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <div className="flex items-center">
+                          <div className="text-sm font-medium text-gray-900">
+                            {user.firstname} {user.lastname} ({user.username})
+                          </div>
+                          <span className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor(user.role)}`}>
+                            {user.role}
+                          </span>
+                          {user.organization_role && user.organization_role !== 'user' && (
+                            <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                              {user.organization_role}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-sm text-gray-500">{user.email}</div>
+                        <div className="flex items-center space-x-4 text-xs text-gray-400">
+                          <span>Created: {new Date(user.created_at).toLocaleDateString()}</span>
+                          {!groupByOrganization && user.organization_name && (
+                            <span className="flex items-center space-x-2">
+                              <span className="text-blue-600">• {user.organization_name}</span>
+                              {user.organization_status && (
+                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getOrganizationStatusBadge(user.organization_status)}`}>
+                                  {user.organization_status}
+                                </span>
+                              )}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => handleEdit(user)}
+                        className="text-blue-600 hover:text-blue-900 text-sm font-medium"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(user.id)}
+                        className="text-red-600 hover:text-red-900 text-sm font-medium"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            {orgUsers.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                No users found in {orgName}.
+              </div>
+            )}
+          </div>
+        ))}
         {users.length === 0 && (
           <div className="text-center py-8 text-gray-500">
             No users found.

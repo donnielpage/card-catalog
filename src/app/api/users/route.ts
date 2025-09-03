@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
           u.role as global_role, u.tenant_role as organization_role, 
           u.tenant_id, u.favorite_team_id, u.favorite_player_id, 
           u.created_at, u.updated_at,
-          t.name as organization_name, t.slug as organization_slug
+          t.name as organization_name, t.slug as organization_slug, t.status as organization_status, t.status as organization_status
         FROM users u
         LEFT JOIN tenants t ON u.tenant_id = t.id
         ORDER BY u.created_at DESC
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
           u.role as global_role, u.tenant_role as organization_role,
           u.tenant_id, u.favorite_team_id, u.favorite_player_id, 
           u.created_at, u.updated_at,
-          t.name as organization_name, t.slug as organization_slug
+          t.name as organization_name, t.slug as organization_slug, t.status as organization_status
         FROM users u
         LEFT JOIN tenants t ON u.tenant_id = t.id
         WHERE u.tenant_id = $1

@@ -63,7 +63,9 @@ export async function PUT(
     // Get updated user with full session information
     const updatedUser = await cardService.db.get(
       isMultiTenant 
-        ? 'SELECT id, username, email, firstname, lastname, role, tenant_id, tenant_role, organization_role, tenant_name, tenant_slug, favorite_team_id, favorite_player_id FROM users WHERE id = $1'
+        ? `SELECT u.id, u.username, u.email, u.firstname, u.lastname, u.role, u.tenant_id, u.tenant_role, u.organization_role, 
+                  t.name as tenant_name, t.slug as tenant_slug, u.favorite_team_id, u.favorite_player_id 
+           FROM users u LEFT JOIN tenants t ON u.tenant_id = t.id WHERE u.id = $1`
         : 'SELECT id, username, email, firstname, lastname, role, favorite_team_id, favorite_player_id FROM users WHERE id = ?',
       [isMultiTenant ? id : parseInt(id)]
     );

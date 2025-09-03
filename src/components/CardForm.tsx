@@ -80,7 +80,7 @@ export default function CardForm({ card, onSubmit, onCancel }: CardFormProps) {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value === '' ? undefined : (name === 'year') ? parseInt(value) || undefined : value
+      [name]: (name === 'notes' || name === 'condition') ? value : (value === '' ? undefined : (name === 'year') ? parseInt(value) || undefined : value)
     }));
   };
 
@@ -282,7 +282,7 @@ export default function CardForm({ card, onSubmit, onCancel }: CardFormProps) {
             </label>
             <select
               name="condition"
-              value={formData.condition}
+              value={formData.condition || ''}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >

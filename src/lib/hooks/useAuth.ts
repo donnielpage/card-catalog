@@ -65,7 +65,7 @@ const canCreate = (userRole: string): boolean => {
 };
 
 const canModify = (userRole: string): boolean => {
-  return hasPermission(userRole, 'manager');
+  return hasPermission(userRole, 'user'); // Allow all authenticated users to edit cards
 };
 
 const canManageUsers = (userRole: string): boolean => {

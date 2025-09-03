@@ -108,7 +108,10 @@ export class TenantAwareCardService {
 
     if (this.isMultiTenant) {
       // PostgreSQL mode with tenant context
-      return await this.db.get(sql, [id]) as CardWithDetails | null;
+      if (!this.tenantContext?.tenantId) {
+        throw new Error('Tenant context required for multi-tenant operations');
+      }
+      return await this.db.get(sql, [id, this.tenantContext.tenantId]) as CardWithDetails | null;
     } else {
       // SQLite mode
       return await this.db.get(sql, [id]) as CardWithDetails | null;
@@ -207,7 +210,10 @@ export class TenantAwareCardService {
     values.push(id);
     
     if (this.isMultiTenant) {
-      // Tenant context is handled by the database adapter
+      if (!this.tenantContext?.tenantId) {
+        throw new Error('Tenant context required for multi-tenant operations');
+      }
+      values.push(this.tenantContext.tenantId);
     }
 
     const result = await this.db.run(sql, values);
@@ -219,8 +225,16 @@ export class TenantAwareCardService {
       ? 'DELETE FROM cards WHERE id = $1 AND tenant_id = $2'
       : 'DELETE FROM cards WHERE id = ?';
     
-    const result = await this.db.run(sql, [id]);
-    return (result.changes ?? 0) > 0;
+    if (this.isMultiTenant) {
+      if (!this.tenantContext?.tenantId) {
+        throw new Error('Tenant context required for multi-tenant operations');
+      }
+      const result = await this.db.run(sql, [id, this.tenantContext.tenantId]);
+      return (result.changes ?? 0) > 0;
+    } else {
+      const result = await this.db.run(sql, [id]);
+      return (result.changes ?? 0) > 0;
+    }
   }
 
   // Teams CRUD

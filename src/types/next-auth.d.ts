@@ -12,6 +12,7 @@ declare module "next-auth" {
       tenant_id: string;
       tenant_name: string;
       tenant_slug: string;
+      tenant_status: string;
       firstname: string;
       lastname: string;
       favorite_team_id: number;
@@ -29,6 +30,7 @@ declare module "next-auth" {
     tenant_id: string;
     tenant_name: string;
     tenant_slug: string;
+    tenant_status: string;
     firstname: string;
     lastname: string;
     favorite_team_id: number;
@@ -44,6 +46,7 @@ declare module "next-auth/jwt" {
     tenant_id: string;
     tenant_name: string;
     tenant_slug: string;
+    tenant_status: string;
     username: string;
     firstname: string;
     lastname: string;

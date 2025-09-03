@@ -44,6 +44,34 @@ interface SystemInfo {
   };
 }
 
+interface StorageMetrics {
+  database: {
+    size: number;
+    sizeFormatted: string;
+    lastModified: string | null;
+    exists: boolean;
+  };
+  uploads: {
+    size: number;
+    sizeFormatted: string;
+    fileCount: number;
+    path: string;
+  };
+  application: {
+    totalSize: number;
+    totalSizeFormatted: string;
+  };
+  system: {
+    total: string;
+    used: string;
+    available: string;
+    usePercentage: number;
+    platform: string;
+    nodeVersion: string;
+  };
+  timestamp: string;
+}
+
 interface BackupLists {
   database: BackupFile[];
   images: BackupFile[];
@@ -69,8 +97,10 @@ export default function SystemManagement() {
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
   const [backups, setBackups] = useState<BackupLists | null>(null);
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
+  const [storageMetrics, setStorageMetrics] = useState<StorageMetrics | null>(null);
   const [changelog, setChangelog] = useState<ChangelogEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [storageLoading, setStorageLoading] = useState(false);
   const [backupLoading, setBackupLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
 
@@ -80,6 +110,18 @@ export default function SystemManagement() {
       loadBackups();
       loadVersionInfo();
       loadChangelog();
+      loadStorageMetrics();
+    }
+  }, [canManageGlobalSystem, session]);
+
+  // Auto-refresh storage metrics every 5 minutes
+  useEffect(() => {
+    if (canManageGlobalSystem && session) {
+      const interval = setInterval(() => {
+        loadStorageMetrics();
+      }, 5 * 60 * 1000); // 5 minutes
+
+      return () => clearInterval(interval);
     }
   }, [canManageGlobalSystem, session]);
 
@@ -130,6 +172,22 @@ export default function SystemManagement() {
     } catch (error) {
       console.error('Error loading changelog:', error);
     }
+  };
+
+  const loadStorageMetrics = async () => {
+    setStorageLoading(true);
+    try {
+      const response = await fetch('/api/system/storage');
+      if (response.ok) {
+        const data = await response.json();
+        setStorageMetrics(data);
+      } else {
+        console.error('Failed to load storage metrics:', response.status);
+      }
+    } catch (error) {
+      console.error('Error loading storage metrics:', error);
+    }
+    setStorageLoading(false);
   };
 
   const createBackup = async (type: 'database' | 'images' | 'system') => {
@@ -191,6 +249,183 @@ export default function SystemManagement() {
           'bg-blue-50 text-blue-800 border border-blue-200'
         }`}>
           {message.text}
+        </div>
+      )}
+
+      {/* Storage Dashboard - Full Width */}
+      {storageMetrics && (
+        <div className="mb-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-semibold text-gray-900">Storage Dashboard</h2>
+            <button
+              onClick={loadStorageMetrics}
+              disabled={storageLoading}
+              className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 disabled:opacity-50"
+            >
+              {storageLoading ? 'Refreshing...' : '🔄 Refresh'}
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Database Storage */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-medium text-blue-900">Database</h3>
+                <span className="text-2xl">🗄️</span>
+              </div>
+              <div className="space-y-1">
+                <p className="text-2xl font-bold text-blue-800">{storageMetrics.database.sizeFormatted}</p>
+                <p className="text-sm text-blue-700">
+                  Status: {storageMetrics.database.exists ? 'Active' : 'Missing'}
+                </p>
+                {storageMetrics.database.lastModified && (
+                  <p className="text-xs text-blue-600">
+                    Modified: {new Date(storageMetrics.database.lastModified).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Upload Storage */}
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-medium text-green-900">Uploads</h3>
+                <span className="text-2xl">🖼️</span>
+              </div>
+              <div className="space-y-1">
+                <p className="text-2xl font-bold text-green-800">{storageMetrics.uploads.sizeFormatted}</p>
+                <p className="text-sm text-green-700">
+                  {storageMetrics.uploads.fileCount} files
+                </p>
+                <p className="text-xs text-green-600 truncate" title={storageMetrics.uploads.path}>
+                  {storageMetrics.uploads.path.split('/').pop()}
+                </p>
+              </div>
+            </div>
+
+            {/* Total Application */}
+            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-medium text-purple-900">Application Total</h3>
+                <span className="text-2xl">📦</span>
+              </div>
+              <div className="space-y-1">
+                <p className="text-2xl font-bold text-purple-800">{storageMetrics.application.totalSizeFormatted}</p>
+                <p className="text-sm text-purple-700">Database + Uploads</p>
+                <p className="text-xs text-purple-600">
+                  Node.js {storageMetrics.system.nodeVersion}
+                </p>
+              </div>
+            </div>
+
+            {/* System Disk Space */}
+            <div className={`border rounded-lg p-4 ${
+              storageMetrics.system.usePercentage > 90 
+                ? 'bg-red-50 border-red-200' 
+                : storageMetrics.system.usePercentage > 75 
+                ? 'bg-yellow-50 border-yellow-200' 
+                : 'bg-gray-50 border-gray-200'
+            }`}>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className={`font-medium ${
+                  storageMetrics.system.usePercentage > 90 
+                    ? 'text-red-900' 
+                    : storageMetrics.system.usePercentage > 75 
+                    ? 'text-yellow-900' 
+                    : 'text-gray-900'
+                }`}>System Disk</h3>
+                <span className="text-2xl">💽</span>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className={`text-sm ${
+                    storageMetrics.system.usePercentage > 90 
+                      ? 'text-red-700' 
+                      : storageMetrics.system.usePercentage > 75 
+                      ? 'text-yellow-700' 
+                      : 'text-gray-700'
+                  }`}>Used: {storageMetrics.system.used}</span>
+                  <span className={`text-sm font-medium ${
+                    storageMetrics.system.usePercentage > 90 
+                      ? 'text-red-800' 
+                      : storageMetrics.system.usePercentage > 75 
+                      ? 'text-yellow-800' 
+                      : 'text-gray-800'
+                  }`}>{storageMetrics.system.usePercentage}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className={`h-2 rounded-full ${
+                      storageMetrics.system.usePercentage > 90 
+                        ? 'bg-red-600' 
+                        : storageMetrics.system.usePercentage > 75 
+                        ? 'bg-yellow-500' 
+                        : 'bg-blue-600'
+                    }`}
+                    style={{ width: `${Math.min(storageMetrics.system.usePercentage, 100)}%` }}
+                  ></div>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className={storageMetrics.system.usePercentage > 90 ? 'text-red-600' : storageMetrics.system.usePercentage > 75 ? 'text-yellow-600' : 'text-gray-600'}>
+                    Available: {storageMetrics.system.available}
+                  </span>
+                  <span className={storageMetrics.system.usePercentage > 90 ? 'text-red-600' : storageMetrics.system.usePercentage > 75 ? 'text-yellow-600' : 'text-gray-600'}>
+                    Total: {storageMetrics.system.total}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Storage Alerts */}
+          {storageMetrics.system.usePercentage > 75 && (
+            <div className={`mt-4 p-4 rounded-lg border ${
+              storageMetrics.system.usePercentage > 90 
+                ? 'bg-red-50 border-red-200' 
+                : 'bg-yellow-50 border-yellow-200'
+            }`}>
+              <div className="flex items-start">
+                <span className="text-2xl mr-3">
+                  {storageMetrics.system.usePercentage > 90 ? '🚨' : '⚠️'}
+                </span>
+                <div>
+                  <h4 className={`font-medium ${
+                    storageMetrics.system.usePercentage > 90 ? 'text-red-900' : 'text-yellow-900'
+                  }`}>
+                    {storageMetrics.system.usePercentage > 90 ? 'Critical: Low Disk Space' : 'Warning: Disk Space Running Low'}
+                  </h4>
+                  <p className={`text-sm mt-1 ${
+                    storageMetrics.system.usePercentage > 90 ? 'text-red-700' : 'text-yellow-700'
+                  }`}>
+                    Your system disk is {storageMetrics.system.usePercentage}% full. 
+                    {storageMetrics.system.usePercentage > 90 
+                      ? ' Consider freeing up space or expanding storage immediately to prevent application issues.'
+                      : ' Consider cleaning up old backups or expanding storage capacity soon.'
+                    }
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setMessage({ 
+                        type: 'info', 
+                        text: 'Backup cleanup: You can safely delete old backup files from the backups directory to free up space.' 
+                      })}
+                      className={`px-3 py-1 text-xs rounded-md ${
+                        storageMetrics.system.usePercentage > 90 
+                          ? 'bg-red-100 text-red-700 hover:bg-red-200' 
+                          : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+                      }`}
+                    >
+                      💡 Cleanup Tips
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="mt-4 text-xs text-gray-500 text-right">
+            Last updated: {new Date(storageMetrics.timestamp).toLocaleString()}
+          </div>
         </div>
       )}
 

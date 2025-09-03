@@ -16,6 +16,12 @@ export default function UserProfile() {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [showPasswordChange, setShowPasswordChange] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
 
   useEffect(() => {
     fetchTeamsAndPlayers();
@@ -90,6 +96,50 @@ export default function UserProfile() {
     } catch (error) {
       console.error('Error updating favorites:', error);
       setMessage('An error occurred while updating favorites');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setMessage('New passwords do not match');
+      return;
+    }
+    
+    if (passwordData.newPassword.length < 8) {
+      setMessage('New password must be at least 8 characters long');
+      return;
+    }
+    
+    setLoading(true);
+    setMessage('');
+    
+    try {
+      const response = await fetch(`/api/users/${user?.id}/password`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          currentPassword: passwordData.currentPassword,
+          newPassword: passwordData.newPassword,
+        }),
+      });
+      
+      if (response.ok) {
+        setMessage('Password updated successfully!');
+        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        setShowPasswordChange(false);
+      } else {
+        const errorData = await response.json();
+        setMessage(errorData.error || 'Failed to update password');
+      }
+    } catch (error) {
+      console.error('Error updating password:', error);
+      setMessage('Failed to update password');
     } finally {
       setLoading(false);
     }
@@ -183,6 +233,74 @@ export default function UserProfile() {
             </button>
           </div>
         </form>
+      </div>
+
+      {/* Password Change Section */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">Password Settings</h3>
+          <button
+            onClick={() => setShowPasswordChange(!showPasswordChange)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {showPasswordChange ? 'Cancel' : 'Change Password'}
+          </button>
+        </div>
+
+        {showPasswordChange && (
+          <form onSubmit={handlePasswordChange} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Current Password
+              </label>
+              <input
+                type="password"
+                value={passwordData.currentPassword}
+                onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                New Password
+              </label>
+              <input
+                type="password"
+                value={passwordData.newPassword}
+                onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                required
+                minLength={8}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">Password must be at least 8 characters long</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Confirm New Password
+              </label>
+              <input
+                type="password"
+                value={passwordData.confirmPassword}
+                onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="flex space-x-3">
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 disabled:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                {loading ? 'Updating...' : 'Update Password'}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );

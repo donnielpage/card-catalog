@@ -18,6 +18,54 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '3.0.0',
+    releaseDate: '2025-09-03',
+    type: 'major',
+    title: 'Complete Microservices Transformation',
+    description: 'Revolutionary architectural transformation from monolithic to comprehensive microservices ecosystem with Phase VI Card Service implementation.',
+    changes: {
+      added: [
+        'Phase VI Card Service - Complete card management microservice (port 3006)',
+        'Multi-tenant card operations with Row Level Security policies',
+        'Cross-service validation with Reference Service integration',
+        'Advanced card search capabilities across all fields and related data',
+        'Card statistics generation with year distribution, grade analysis, top players/manufacturers',
+        'Complete microservices architecture: Media (3001), Reference (3002), User (3003), System (3004), Tenant (3005), Card (3006)',
+        'Docker Compose orchestration for full stack deployment',
+        'nginx API Gateway with intelligent routing to microservices',
+        'PostgreSQL database with multi-tenant Row Level Security',
+        'Redis caching layer for improved performance',
+        'Health monitoring endpoints across all services',
+        'Service-to-service authentication with JWT tokens',
+        'Comprehensive logging with Winston across all services',
+        'Input validation with Joi schemas for all services',
+        'Rate limiting and security headers in API Gateway'
+      ],
+      changed: [
+        'Architecture: Complete transformation from monolithic to microservices',
+        'Database: Enhanced multi-tenant schema with RLS policies',
+        'API Endpoints: Card operations now routed through dedicated Card Service',
+        'Authentication: Centralized JWT authentication across all services',
+        'Deployment: Full containerization with Docker Compose',
+        'Performance: Independent scaling capability for each service',
+        'Security: Enhanced with service-to-service authentication'
+      ],
+      security: [
+        'Multi-tenant Row Level Security policies for data isolation',
+        'Service-to-service authentication tokens',
+        'Enhanced input validation across all microservices',
+        'CORS configuration for cross-origin requests',
+        'Rate limiting in API Gateway to prevent abuse'
+      ]
+    },
+    breaking: [
+      'Monolithic architecture replaced with microservices architecture',
+      'Card API endpoints now routed through API Gateway (/api/cards)',
+      'Enhanced multi-tenant database schema requires migration',
+      'Service dependencies require Docker Compose or individual service management'
+    ]
+  },
+  {
     version: '2.0.0',
     releaseDate: '2025-08-09',
     type: 'major',

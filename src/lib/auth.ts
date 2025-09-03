@@ -48,6 +48,7 @@ export const authOptions: NextAuthOptions = {
             tenant_id: result.user.tenant_id,
             tenant_name: result.user.tenant_name,
             tenant_slug: result.user.tenant_slug,
+            tenant_status: result.user.tenant_status,
             favorite_team_id: result.user.favorite_team_id,
             favorite_player_id: result.user.favorite_player_id,
           };
@@ -72,6 +73,7 @@ export const authOptions: NextAuthOptions = {
         token.tenant_id = (user as any).tenant_id;
         token.tenant_name = (user as any).tenant_name;
         token.tenant_slug = (user as any).tenant_slug;
+        token.tenant_status = (user as any).tenant_status;
         token.username = user.username;
         token.firstname = user.firstname;
         token.lastname = user.lastname;
@@ -107,6 +109,7 @@ export const authOptions: NextAuthOptions = {
         session.user.tenant_id = token.tenant_id as string;
         session.user.tenant_name = token.tenant_name as string;
         session.user.tenant_slug = token.tenant_slug as string;
+        session.user.tenant_status = token.tenant_status as string;
         session.user.username = token.username as string;
         session.user.firstname = token.firstname as string;
         session.user.lastname = token.lastname as string;
@@ -234,7 +237,7 @@ export const canCreate = (userRole: string): boolean => {
 };
 
 export const canModify = (userRole: string): boolean => {
-  return hasPermission(userRole, 'manager');
+  return hasPermission(userRole, 'user');
 };
 
 export const canManageUsers = (userRole: string): boolean => {

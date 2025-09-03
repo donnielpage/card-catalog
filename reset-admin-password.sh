@@ -39,20 +39,68 @@ main() {
     print_header
     
     # Check if we're in the right directory
-    if [ ! -f "package.json" ] || [ ! -f "carddb.sqlite" ]; then
+    if [ ! -f "package.json" ] || [ ! -f ".env.local" ]; then
         print_error "CardVault files not found. Please run this script from the card-catalog directory."
         exit 1
     fi
     
-    # Check if admin user exists
-    admin_count=$(sqlite3 carddb.sqlite "SELECT COUNT(*) FROM users WHERE username = 'admin';")
+    # Check if multi-tenant mode is enabled
+    if grep -q "ENABLE_MULTI_TENANT=true" .env.local; then
+        print_info "Multi-tenant mode detected, using PostgreSQL database"
+        DB_MODE="postgresql"
+        
+        # Source database configuration
+        source .env.local
+        DB_NAME=${POSTGRES_DB:-cardvault_dev}
+        
+        # Check if admin users exist (global_admin or org_admin roles)
+        admin_count=$(psql $DB_NAME -t -c "SELECT COUNT(*) FROM users WHERE role = 'global_admin' OR organization_role = 'org_admin';" | xargs)
+    else
+        print_info "Single-tenant mode detected, using SQLite database"
+        DB_MODE="sqlite"
+        
+        if [ ! -f "carddb.sqlite" ]; then
+            print_error "SQLite database file not found."
+            exit 1
+        fi
+        
+        # Check if admin user exists
+        admin_count=$(sqlite3 carddb.sqlite "SELECT COUNT(*) FROM users WHERE username = 'admin';")
+    fi
     
     if [ "$admin_count" -eq 0 ]; then
-        print_error "Admin user not found in database."
+        print_error "No admin users found in database."
+        if [ "$DB_MODE" = "postgresql" ]; then
+            print_info "In multi-tenant mode, admin users have role = 'global_admin' or organization_role = 'org_admin'."
+            print_info "You may need to create an admin user first."
+        fi
         exit 1
     fi
     
-    print_info "Resetting password for admin user..."
+    # Show available admin users and let user select
+    if [ "$DB_MODE" = "postgresql" ]; then
+        print_info "Available admin users:"
+        psql $DB_NAME -c "SELECT username, email, role, organization_role FROM users WHERE role = 'global_admin' OR organization_role = 'org_admin';"
+        echo ""
+        
+        while true; do
+            read -p "Enter the username to reset password for: " selected_username
+            if [ -n "$selected_username" ]; then
+                user_exists=$(psql $DB_NAME -t -c "SELECT COUNT(*) FROM users WHERE username = '$selected_username' AND (role = 'global_admin' OR organization_role = 'org_admin');" | xargs)
+                if [ "$user_exists" -eq 1 ]; then
+                    break
+                else
+                    print_warning "User '$selected_username' not found or is not an admin user. Please try again."
+                fi
+            else
+                print_warning "Username cannot be empty. Please try again."
+            fi
+        done
+    else
+        selected_username="admin"
+    fi
+    
+    print_info "Resetting password for user: $selected_username"
     echo ""
     
     # Get new admin password
@@ -86,15 +134,25 @@ main() {
     
     if [ $? -eq 0 ] && [ -n "$password_hash" ]; then
         # Update admin user password
-        sqlite3 carddb.sqlite "UPDATE users SET password_hash = '$password_hash' WHERE username = 'admin';"
-        print_success "Admin password updated successfully"
-        echo ""
-        print_info "New admin login credentials:"
-        print_info "  Username: admin"
-        print_info "  Password: [the password you just set]"
-        echo ""
-        print_warning "Please restart the application for changes to take effect:"
-        print_info "  pkill -f 'next start' && ./start.sh"
+        if [ "$DB_MODE" = "postgresql" ]; then
+            psql $DB_NAME -c "UPDATE users SET password_hash = '$password_hash' WHERE username = '$selected_username';"
+        else
+            sqlite3 carddb.sqlite "UPDATE users SET password_hash = '$password_hash' WHERE username = '$selected_username';"
+        fi
+        
+        if [ $? -eq 0 ]; then
+            print_success "Admin password updated successfully"
+            echo ""
+            print_info "New admin login credentials:"
+            print_info "  Username: $selected_username"
+            print_info "  Password: [the password you just set]"
+            echo ""
+            print_warning "Please restart the application for changes to take effect:"
+            print_info "  pkill -f 'next' && npm run dev"
+        else
+            print_error "Failed to update password in database"
+            exit 1
+        fi
     else
         print_error "Failed to generate password hash"
         exit 1

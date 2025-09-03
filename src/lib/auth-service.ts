@@ -21,13 +21,13 @@ export async function authenticateUser(username: string, password: string, isRef
   try {
     const isMultiTenant = process.env.ENABLE_MULTI_TENANT === 'true';
     
-    // Query includes tenant information for hierarchical roles
+    // Query includes tenant information for hierarchical roles and status
     const userQuery = isMultiTenant ? `
       SELECT 
         u.id, u.username, u.email, u.firstname, u.lastname, 
         u.password_hash, u.role, u.tenant_role, u.tenant_id,
         u.favorite_team_id, u.favorite_player_id, u.created_at, u.updated_at,
-        t.name as tenant_name, t.slug as tenant_slug
+        t.name as tenant_name, t.slug as tenant_slug, t.status as tenant_status
       FROM users u
       LEFT JOIN tenants t ON u.tenant_id = t.id
       WHERE LOWER(u.username) = LOWER($1)
@@ -52,6 +52,24 @@ export async function authenticateUser(username: string, password: string, isRef
       }
     }
 
+    // Check organization status for multi-tenant users
+    if (isMultiTenant && user.tenant_id) {
+      const tenantStatus = user.tenant_status;
+      
+      if (tenantStatus === 'inactive') {
+        return { user: null, error: 'Your organization is currently inactive. Please contact your administrator.' };
+      }
+      
+      if (tenantStatus === 'suspended') {
+        return { user: null, error: 'Your organization has been suspended. Please contact support for assistance.' };
+      }
+      
+      // Only allow active organizations and global admin users (who might not have a tenant)
+      if (tenantStatus && tenantStatus !== 'active' && user.role !== 'global_admin') {
+        return { user: null, error: 'Your organization status does not allow access at this time.' };
+      }
+    }
+
     // Return user with hierarchical role information
     const hierarchicalUser: HierarchicalUser = {
       id: user.id,
@@ -67,6 +85,7 @@ export async function authenticateUser(username: string, password: string, isRef
       organization_role: user.tenant_role || 'user',
       tenant_name: user.tenant_name,
       tenant_slug: user.tenant_slug,
+      tenant_status: user.tenant_status,
       favorite_team_id: user.favorite_team_id,
       favorite_player_id: user.favorite_player_id,
       created_at: user.created_at,

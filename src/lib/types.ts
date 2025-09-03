@@ -1,9 +1,9 @@
 export interface Card {
-  id?: number;
+  id?: string | number; // Support both UUID (PostgreSQL) and number (SQLite)
   cardnumber: string;
-  playerid?: number;
-  teamid?: number;
-  manufacturerid?: number;
+  playerid?: string | number; // Support both UUID and number IDs
+  teamid?: string | number; // Support both UUID and number IDs
+  manufacturerid?: string | number; // Support both UUID and number IDs
   year?: number;
   imageurl?: string;
   condition?: string;
@@ -11,14 +11,14 @@ export interface Card {
 }
 
 export interface Player {
-  id?: number;
+  id?: string | number; // Support both UUID (PostgreSQL) and number (SQLite)
   firstname: string;
   lastname: string;
   dob?: string;
 }
 
 export interface Team {
-  id?: number;
+  id?: string | number; // Support both UUID (PostgreSQL) and number (SQLite)
   city: string;
   mascot?: string;
   teamname: string;
@@ -28,7 +28,7 @@ export interface Team {
 }
 
 export interface Manufacturer {
-  id?: number;
+  id?: string | number; // Support both UUID (PostgreSQL) and number (SQLite)
   company: string;
   year?: number;
   subsetname?: string;
@@ -70,6 +70,7 @@ export interface HierarchicalUser extends User {
   organization_role: OrganizationRole;
   tenant_name?: string;
   tenant_slug?: string;
+  tenant_status?: string;
 }
 
 export interface Session {
